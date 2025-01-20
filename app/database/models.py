@@ -20,8 +20,13 @@ class VerificationCode(Base):
 class Users(Base):
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    userID = Column(Integer, primary_key=True, autoincrement=True, index=True)
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     phone_no = Column(String, nullable=False, unique=True)
-    email = Column(String, nullable=False, unique=True, index=True)
+    aadhaar_no = Column(String, nullable=False, unique=True, index=True)
+    profile_location = Column(String)
+    aadhaar_location = Column(String)
+    public_key = Column(String,)
+    private_key = Column(String)
+
