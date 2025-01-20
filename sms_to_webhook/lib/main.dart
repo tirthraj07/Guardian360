@@ -21,7 +21,7 @@ class SmsApp extends StatelessWidget {
 }
 
 class SmsHomePage extends StatefulWidget {
-  const SmsHomePage({super.key});
+  const SmsHomePage({Key? key}) : super(key: key);
 
   @override
   State<SmsHomePage> createState() => _SmsHomePageState();
