@@ -1,12 +1,5 @@
 from pydantic import BaseModel, EmailStr
 
-
-class UserCreate(BaseModel):
-    first_name: str
-    last_name: str
-    phone_no: str
-    email: EmailStr
-
 class UserRequest(BaseModel):
     email: EmailStr
 
@@ -16,3 +9,9 @@ class VerifyCodeRequest(BaseModel):
     last_name: str
     phone_no: str
     code: str
+    aadhar_no: str
+    profile_pic_location: str
+    aadhar_location: str
+    public_key: str
+    private_key: str
+
