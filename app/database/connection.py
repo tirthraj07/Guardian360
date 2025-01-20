@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, DateTime
+from sqlalchemy import Integer, create_engine, Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
@@ -19,6 +19,15 @@ class VerificationCode(Base):
     email = Column(String, primary_key=True, index=True)
     code = Column(String, index=True)
     expiry = Column(DateTime)
+
+class Users(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
+    phone_no = Column(String, nullable=False, unique=True)
+    email = Column(String, nullable=False, unique=True, index=True)
 
 # Function to create tables in the database
 def create_database():

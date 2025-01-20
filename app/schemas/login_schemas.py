@@ -2,21 +2,17 @@ from pydantic import BaseModel, EmailStr
 
 
 class UserCreate(BaseModel):
-    name: str
-    email: EmailStr
-    password: str
-
-class UserOut(BaseModel):
-    id:int
-    name: str
+    first_name: str
+    last_name: str
+    phone_no: str
     email: EmailStr
 
-    class Config:
-        orm_mode = True
-
-class EmailRequest(BaseModel):
+class UserRequest(BaseModel):
     email: EmailStr
 
 class VerifyCodeRequest(BaseModel):
     email: EmailStr
+    first_name: str
+    last_name: str
+    phone_no: str
     code: str
