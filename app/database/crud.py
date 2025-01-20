@@ -35,6 +35,5 @@ def create_user(db: Session, first_name, last_name, email, phone_no):
 def get_all_users(db: Session):
     return db.query(Users).all()
 
-# Function to get a specific user by email
 def get_user_by_email(db: Session, email: str):
     return db.query(Users).filter(Users.email == email).first()
