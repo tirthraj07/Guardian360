@@ -1,0 +1,76 @@
+const express = require('express');
+const auth_router = express.Router();
+const UserService = require("../../service/user_service");
+const JSON_WEB_TOKEN = require("../../methods/jwt");
+
+
+auth_router.get('/', (req,res)=>{
+    res.send('Auth Endpoint');
+})
+
+
+auth_router.post('/send-code', async (req,res)=>{
+    const email = req.body.email;
+    
+    if(!email){
+        res.json({status:"error", message:"email is required"});
+    }
+
+    const result = await UserService.send_verification_code(email);
+    if(result.success){
+        res.json({status:"success", message:"Verification code sent to email"});
+    }
+    else{
+        console.error(result.message);
+        res.json({status:"error", message:"Failed to send verification code"});
+    } 
+});
+
+auth_router.post('/signup', async (req,res)=>{
+    const {first_name, last_name, phone_no, email, aadhar_no, code} = req.body;
+    if(!first_name || !last_name || !phone_no || !email || !aadhar_no || !code){
+        res.status(400).json({status:"error", message:"All fields are required: first_name, last_name, phone_no, email, aadhar_no, code"});
+        return;
+    }
+
+    try{
+        const verifyCode = await UserService.verify_verification_code(email, code);
+        if(!verifyCode.valid){
+            console.log(verifyCode.message);
+            res.status(400).json({status:"error", message:verifyCode.message});
+            return;
+        }
+
+        const user = await UserService.add_user(first_name, last_name, email, phone_no, aadhar_no);
+        
+        const jwt = new JSON_WEB_TOKEN();
+        const payload = jwt.createPayload(user.userID, user.email);
+        const userToken = jwt.createToken(payload);
+        
+        if(user){
+            res
+            .cookie('userToken' , userToken ,{ httpOnly:true })
+            .setHeader('Content-Type', 'application/json')
+            .status(201)
+            .json(
+                {
+                    status:"success", 
+                    message:"User created successfully", 
+                    user: user,
+                    userToken: userToken
+                }
+            );
+        }
+
+    } catch(error){
+        console.error(error.message);
+        res.status(500).json({status:"error", message:"Failed to signup"});
+    }
+
+});
+
+auth_router.post('/login', (req,res)=>{
+    res.send('Login Endpoint');
+});
+
+module.exports = auth_router;
