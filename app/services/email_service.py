@@ -7,7 +7,7 @@ conf = ConnectionConfig(
     MAIL_FROM="sn2204amey@gmail.com",
     MAIL_PORT=587,
     MAIL_SERVER="smtp.gmail.com",
-    MAIL_FROM_NAME="guardians",
+    MAIL_FROM_NAME="Guardians",
     MAIL_STARTTLS=True,         # Replaces MAIL_TLS
     MAIL_SSL_TLS=False          # Replaces MAIL_SSL
 )

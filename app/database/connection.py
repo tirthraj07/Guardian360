@@ -29,7 +29,6 @@ class Users(Base):
     phone_no = Column(String, nullable=False, unique=True)
     email = Column(String, nullable=False, unique=True, index=True)
 
-# Function to create tables in the database
 def create_database():
     Base.metadata.create_all(bind=engine)
 

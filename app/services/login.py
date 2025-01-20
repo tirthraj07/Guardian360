@@ -11,6 +11,7 @@ from app.services.token_verification import verify_jwt_token
 from app.utils.email_code import email_to_send
 
 router = APIRouter(
+    prefix='/auth',
     tags=['Auth']
 )
 
@@ -31,6 +32,8 @@ async def send_verification_code(request: UserRequest, db: Session = Depends(get
     email = request.email
     code = str(random.randint(100000, 999999))
     expiry = datetime.utcnow() + timedelta(minutes=VERIFICATION_CODE_EXPIRY_MINUTES)
+
+    crud.delete_verification_code(db, email=email)
 
     crud.create_verification_code(db, email=email, code=code, expiry=expiry)
 
