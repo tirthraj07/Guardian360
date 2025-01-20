@@ -8,8 +8,8 @@ conf = ConnectionConfig(
     MAIL_PORT=587,
     MAIL_SERVER="smtp.gmail.com",
     MAIL_FROM_NAME="Guardians",
-    MAIL_STARTTLS=True,         # Replaces MAIL_TLS
-    MAIL_SSL_TLS=False          # Replaces MAIL_SSL
+    MAIL_STARTTLS=True,        
+    MAIL_SSL_TLS=False
 )
 async def send_email(subject: str, recipient: str, body: str):
     """

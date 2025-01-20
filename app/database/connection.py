@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from app.database.models import VerificationCode, Users, Base  # Import models
 
 # Database URL for PostgreSQL (adjust this to your settings)
-DATABASE_URL = "postgresql://postgres:Amey1234@localhost/guardians"
+DATABASE_URL = "postgresql://postgres:dyEN3ztn7oNvtnvm@db.fwodfpsgrfizmaeonqdk.supabase.co:5432/postgres"
 
 # Setup SQLAlchemy database engine and session
 engine = create_engine(DATABASE_URL)
@@ -19,5 +19,7 @@ def get_db():
 
 def create_database():
     Base.metadata.create_all(bind=engine)
-
+    
+print(DATABASE_URL)
 create_database()
+

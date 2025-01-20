@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
 # Setup SQLAlchemy database engine and session
-DATABASE_URL = "postgresql://postgres:Amey1234@localhost/guardians"
+DATABASE_URL = "postgresql://postgres:dyEN3ztn7oNvtnvm@db.fwodfpsgrfizmaeonqdk.supabase.co:5432/postgres"
 
 engine = create_engine(DATABASE_URL)
 
@@ -24,7 +24,8 @@ class Users(Base):
     first_name = Column(String, nullable=False)
     last_name = Column(String, nullable=False)
     phone_no = Column(String, nullable=False, unique=True)
-    aadhaar_no = Column(String, nullable=False, unique=True, index=True)
+    email = Column(String, nullable=False, unique=True, index=True)
+    aadhaar_no = Column(String)
     profile_location = Column(String)
     aadhaar_location = Column(String)
     public_key = Column(String,)
