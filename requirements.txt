@@ -1,0 +1,5 @@
+fastapi
+sqlalchemy
+fastapi_mail
+python-jose
+python-dotenv
