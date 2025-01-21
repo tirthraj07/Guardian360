@@ -16,6 +16,9 @@ class FriendRequest(BaseModel):
     userID: int
     friend_requests: List
 
+class SeeAvaialableFriendRequest(BaseModel):
+    userID: int
+
 class FriendsAvailableCheck(BaseModel):
     userID: int
 

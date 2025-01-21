@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from grpc import Status
-from app.database.crud import add_friend, add_friend_request, get_all_users, get_available_friends
-from app.schemas.friend_schema import FriendRequest, FriendsAvailable, FriendsAvailableCheck, FriendsAvailableList
+from app.database.crud import add_friend, add_friend_request, get_all_users, get_available_friends, get_pending_requests
+from app.schemas.friend_schema import FriendRequest, FriendsAvailable, FriendsAvailableCheck, FriendsAvailableList, SeeAvaialableFriendRequest
 
 router = APIRouter(
     tags=['friend routes'],
@@ -58,7 +58,7 @@ def accept_friend_request(request: FriendRequest):
 
         for receiverID in accepted_user_ids:
             try:
-                add_friend(userID, receiverID)
+                add_friend(receiverID, userID)
             except Exception as e:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
@@ -66,6 +66,29 @@ def accept_friend_request(request: FriendRequest):
                 )
 
         return {"message": "Friend Added successfully"}
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An unexpected error occurred: {str(e)}"
+        )
+
+
+@router.post('/pending-requests')
+def get_pending_requests_route(request: SeeAvaialableFriendRequest):
+    try:
+        userID = request.userID
+
+        # Fetch pending friend requests for the given user (Ensure this function exists)
+        pending_requests = get_pending_requests(userID)
+
+        if not pending_requests:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No pending friend requests found"
+            )
+
+        return {"pending_requests": pending_requests}
 
     except Exception as e:
         raise HTTPException(

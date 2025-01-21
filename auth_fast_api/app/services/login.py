@@ -66,7 +66,7 @@ def verify_code(request: VerifyCodeRequest):
     )
     
     crud.delete_verification_code(email=email)
-    crud.create_user(
+    user = crud.create_user(
     first_name=first_name,
     last_name=last_name,
     email=email,
@@ -80,4 +80,4 @@ def verify_code(request: VerifyCodeRequest):
 )
 
     
-    return {"access_token": token, "token_type": "bearer"}
+    return {"access_token": token, "token_type": "bearer", "user" : user}
