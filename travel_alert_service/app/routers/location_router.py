@@ -1,23 +1,27 @@
 from fastapi import APIRouter, HTTPException, status
 
-from app.schemas.location_schemas import TrackLocation
-from app.database.crud import add_current_location
+from app.schemas.location_schemas import FriendLocation, TrackLocation
+from app.database.crud import add_current_location, get_friends_location
 
 router = APIRouter(
     tags=['location routes'],
     prefix='/location'
 )
 
-@router.post('/track-location')
-def track_location(request: TrackLocation):
+@router.post('/{userID}')
+def track_location(userID: int, request: TrackLocation):
 
-    userID = request.userID
     latitude = request.latitude
     longitude = request.longitude
     timestamp = request.timestamp
 
     response = add_current_location(userID, latitude, longitude, timestamp)
 
+@router.get('/{userID}/friends')
+def track_location(userID: int):
 
 
-    return {"message" : "Location sent to friend successfully'"}
+    response = get_friends_location(userID)
+
+
+    return {"friends" : response}

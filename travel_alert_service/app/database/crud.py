@@ -143,4 +143,28 @@ def add_current_location(userID: int, latitude: float, longitude: float, timesta
     except Exception as e:
         print(f"Error occurred while upserting location: {e}")
         return []
+    
+
+def get_friends_location(userID):
+    friends_of_user = supabase.table("friend_relations").select('userID').eq('friendID', userID).execute()
+    friend_ids = [friend['userID'] for friend in friends_of_user.data]
+
+    if not friend_ids:
+        return []
+
+    current_location = supabase.table("current_location").select('userID, latitude, longitude, timestamp').in_('userID', friend_ids).execute()
+    user_details = supabase.table("users").select('userID, first_name, last_name, email, phone_no').in_('userID', friend_ids).execute()
+
+    location_map = {loc.pop('userID'): loc for loc in current_location.data}
+
+    response = []
+    for user in user_details.data:
+        user_info = user.copy()
+        user_info['location'] = location_map.get(user['userID'])
+        response.append(user_info)
+
+    return response
+
+
+
 
