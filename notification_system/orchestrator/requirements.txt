@@ -1,0 +1,7 @@
+Flask
+confluent-kafka
+pydantic
+supabase
+Flask-Cors
+python-dotenv
+Werkzeug
