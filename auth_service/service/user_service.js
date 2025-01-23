@@ -59,15 +59,15 @@ const get_user_by_phone = async (phone_no) => {
 }
 
 // add user
-const add_user = async (first_name, last_name, email, phone_no, aadhar_no) => {
+const add_user = async (first_name, last_name, email, phone_no, aadhar_no, device_token) => {
     try {
-        console.log('Adding user:', first_name, last_name, email, phone_no, aadhar_no);
+        console.log('Adding user:', first_name, last_name, email, phone_no, aadhar_no, device_token);
         const cryto = new Cryptography();
         const aadhar_hash = cryto.generateSaltHash(aadhar_no);        
         const {public_key, private_key} = cryto.generateKeyPair();
         const salt = aadhar_hash.split(':')[0];
         const encryptedPrivateKey = cryto.encipher(private_key, Buffer.from(CIPHER_KEY), salt);
-        const user = await UserRepository.add_user(first_name, last_name, email, phone_no, aadhar_hash, public_key, encryptedPrivateKey);
+        const user = await UserRepository.add_user(first_name, last_name, email, phone_no, aadhar_hash, public_key, encryptedPrivateKey, device_token);
         return user;
     } catch (error) {
         return error;

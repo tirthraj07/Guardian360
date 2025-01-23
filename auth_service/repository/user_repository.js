@@ -50,9 +50,9 @@ const get_user_by_aadhar_no = async (aadhar_no) => {
     }
 }
 
-const add_user = async (first_name, last_name, email, phone_no, aadhar_hash, public_key, private_key_hash) => {
+const add_user = async (first_name, last_name, email, phone_no, aadhar_hash, public_key, private_key_hash, device_token) => {
     try{
-        const user = await db.query('INSERT INTO users (first_name, last_name, email, phone_no, aadhar_no, public_key, private_key) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [first_name, last_name, email, phone_no, aadhar_hash, public_key, private_key_hash]);
+        const user = await db.query('INSERT INTO users (first_name, last_name, email, phone_no, aadhar_no, public_key, private_key, device_token) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', [first_name, last_name, email, phone_no, aadhar_hash, public_key, private_key_hash, device_token]);
         return user.rows[0];
     } catch(error){
         return error;

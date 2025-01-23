@@ -28,6 +28,3 @@ class UserService:
         friends = UserService.get_users_by_ids(friend_ids)
         return friends 
     
-    @staticmethod
-    def get_user_notification_preferences(user_id):
-        return UserNotificationPreferencesRepository.get_user_notification_preferences(user_id)
