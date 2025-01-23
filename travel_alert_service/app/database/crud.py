@@ -164,7 +164,3 @@ def get_friends_location(userID):
         response.append(user_info)
 
     return response
-
-
-
-
