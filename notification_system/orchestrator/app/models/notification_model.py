@@ -19,6 +19,8 @@ class NotificationModel(BaseModel):
 
 '''
 Example Payload:
+event_type : SOS | ADAPTIVE_LOCATION_ALERT | TRAVEL_ALERT | GENERIC
+
 {
   "event_id": "12345",
   "event_type": "SOS",

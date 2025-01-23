@@ -5,3 +5,4 @@ supabase
 Flask-Cors
 python-dotenv
 Werkzeug
+kafka-python

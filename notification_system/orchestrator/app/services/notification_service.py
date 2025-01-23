@@ -2,6 +2,7 @@
 #                         -> message_services_repository -> message_services table
 #                         -> user_notification_preferences_repository -> user_notification_preferences table
 
+from app.models.notification_model import NotificationModel, EventType
 from app.repository.notification_types_repository import NotificationTypesRepository
 from app.repository.message_services_repository import MessageServicesRepository
 from app.repository.user_notification_preferences_repository import UserNotificationPreferencesRepository
@@ -55,3 +56,4 @@ class NotificationService:
             )
 
         return result
+    
