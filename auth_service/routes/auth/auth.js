@@ -73,8 +73,49 @@ auth_router.post('/signup', async (req,res)=>{
 
 });
 
-auth_router.post('/login', (req,res)=>{
-    res.send('Login Endpoint');
+auth_router.post('/login', async (req,res)=>{
+    let {email, code} = req.body;
+    if(!email || !code){
+        res.status(400).json({status:"error", message:"All fields are required: email, code"});
+        return;
+    }
+
+    try{
+        const verifyCode = await UserService.verify_verification_code(email, code);
+        if(!verifyCode.valid){
+            console.log(verifyCode.message);
+            res.status(400).json({status:"error", message:verifyCode.message});
+            return;
+        }
+        const user = await UserService.get_user_by_email(email);
+        const jwt = new JSON_WEB_TOKEN();
+        const payload = jwt.createPayload(user.userID, user.email);
+        const userToken = jwt.createToken(payload);
+        
+        if(user){
+            res
+            .cookie('userToken' , userToken ,{ httpOnly:true })
+            .setHeader('Content-Type', 'application/json')
+            .status(201)
+            .json(
+                {
+                    status:"success", 
+                    message:"User logged in successfully", 
+                    user: user,
+                    userToken: userToken
+                }
+            );
+        }
+        else{
+            res.status(404).json({status:"error", message:"User not found"});
+        }
+
+    }
+    catch(error){
+        console.error(error.message);
+        res.status(500).json({status:"error", message:"Failed to login"});
+    }
+
 });
 
 module.exports = auth_router;
