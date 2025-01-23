@@ -70,7 +70,7 @@ const verify_verification_code = async (email, code) => {
             SELECT * FROM verification_codes
             WHERE email = $1 
             AND code = $2 
-            AND expiry > NOW()
+            AND expiry >= NOW()
             `,
             [email, code]
         );
