@@ -59,8 +59,8 @@ class EventHandler(ABC):
         self.set_priority()
         self.set_notification_channels()
         self.create_notification_event()
+        self.send_to_kafka()
         return self.kafka_message
-        # self.send_to_kafka()
 
     
     

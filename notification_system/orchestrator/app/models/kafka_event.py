@@ -5,4 +5,4 @@ class KafkaEvent(BaseModel):
     event_type: str
     priority: int
     message: str
-    recipeints: list
+    recipients: list
