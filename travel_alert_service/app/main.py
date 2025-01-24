@@ -8,3 +8,4 @@ app = FastAPI()
 app.include_router(friend_routers)
 app.include_router(loc_routers)
 
+#uvicorn app.main:app --reload --port 8000 --host 0.0.0.0
