@@ -164,3 +164,19 @@ def get_friends_location(userID):
         response.append(user_info)
 
     return response
+
+def add_known_place(userID: int, latitude: float, longitude: float, location_name, place_nick_name):
+    response = (
+            supabase.table("travel_locations")
+            .insert({"userID": userID, "latitude": latitude, "longitude": longitude, "location_name": location_name, "place_nick_name": place_nick_name })
+            .execute()
+        )
+    
+    if response.data:
+            return response.data
+    else:
+            return []
+    
+def get_known_places(userID):
+    response = supabase.table("travel_locations").select("*").eq("userID", userID).execute()
+    return response.data if response.data else []
