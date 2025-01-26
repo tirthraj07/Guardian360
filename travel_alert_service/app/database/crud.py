@@ -180,3 +180,20 @@ def add_known_place(userID: int, latitude: float, longitude: float, location_nam
 def get_known_places(userID):
     response = supabase.table("travel_locations").select("*").eq("userID", userID).execute()
     return response.data if response.data else []
+
+def add_location_details(userID, source_latitude, source_longitude, destination_latitude, destination_longitude, notification_frequency, last_message_timestamp):
+    response = (
+            supabase.table("travel_mode_details")
+            .upsert({"userID": userID, "source_latitude": source_latitude, "source_longitude": source_longitude, "destination_latitude": destination_latitude, "destination_longitude": destination_longitude,  "notification_frequency" : notification_frequency, "isValid" : True, "last_notification_timestamp" : last_message_timestamp})
+            .execute()
+        )
+    return response.data[0]
+    
+def check_if_details_exists(user_id: int) -> bool:
+    response = supabase.table("travel_mode_details").select("*").eq("userID", user_id).execute()
+    
+    return len(response.data) > 0
+
+def check_lastMessagetimestamp(user_id: int):
+    response = supabase.table("travel_mode_details").select("last_notification_timestamp").eq("userID", user_id).execute()
+    return response.data[0]['last_notification_timestamp']
