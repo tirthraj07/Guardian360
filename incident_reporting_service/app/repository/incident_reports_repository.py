@@ -1,6 +1,6 @@
 # app/models/incident_report.py
 
-from app.database import supabase
+from app.database.supabase import supabase
 
 class IncidentReportsRepository:
     @staticmethod

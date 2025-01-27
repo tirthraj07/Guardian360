@@ -1,4 +1,4 @@
-from app.database import supabase
+from app.database.supabase import supabase
 
 class IncidentSubTypesRepository:
     @staticmethod
