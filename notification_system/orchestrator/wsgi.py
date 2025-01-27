@@ -1,8 +1,6 @@
 '''
 TODO:
-- To add user FCM token (device token) to users table
-- To write logic for merging user preferences with appropriate contact information
-- To add the merged event into kafka queue for dispatching
+- To Send message to Kafka and test it
 '''
 
 from app import create_app

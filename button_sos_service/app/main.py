@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
+import datetime
 
 app = FastAPI()
 
@@ -52,4 +53,20 @@ async def push_button(request: Message):
     print(f"Received request from user_id: {request.user_id} that Tigger is pressed")
     
     return {"message" : "received data"}
+    device_id: str
+    trigger: int
 
+@app.post("/postjson")
+async def receive_message(data: Message):
+    print(data.trigger)  # Print received data for debugging
+    print(datetime.datetime.now())
+    return {
+        "message": "Message received successfully",
+        "received_data": data.trigger
+    }
+
+
+
+
+
+# Run with: uvicorn app.main:app --reload --port 8001 --host 0.0.0.0
