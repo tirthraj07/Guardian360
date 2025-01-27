@@ -53,14 +53,18 @@ auth_router.post('/signup', async (req,res)=>{
 
         const user = await UserService.add_user(first_name, last_name, email, phone_no, aadhar_no, device_token);
         
-        console.log(`User added, ${user}`);
+        console.log(`User added`);
+        console.log(user);
 
         const jwt = new JSON_WEB_TOKEN();
         const payload = jwt.createPayload(user.userID, user.email);
         const userToken = jwt.createToken(payload);
 
-        console.log(`Payload ${payload}`);
-        conosle.log(`User Token ${userToken}`);
+        console.log(`Payload`);
+        console.log(payload);
+        console.log(`User Token`);
+
+        console.log(userToken)
         
         if(user){
             res

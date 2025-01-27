@@ -73,7 +73,8 @@ class Cryptography{
     }
 
     generateSecureVerificationCode(length = 6) {
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        // const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const characters = '70'
         let code = '';
         const array = new Uint8Array(length);
     
