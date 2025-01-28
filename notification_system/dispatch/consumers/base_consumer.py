@@ -21,7 +21,7 @@ class BaseConsumer:
             while True:
                 msg = self.consumer.poll(timeout=1.0)
                 if msg is None:
-                    print(f"Consumer in Consumer Group {self.group_id} Waiting for messages ...")
+                    # print(f"Consumer in Consumer Group {self.group_id} Waiting for messages ...")
                     continue
                 if msg.error():
                     print(f"Consumer error: {msg.error()}")
@@ -29,12 +29,13 @@ class BaseConsumer:
 
                 key = msg.key().decode('utf-8') if msg.key() else None
                 value = msg.value().decode('utf-8') if msg.value() else None
+                partition = msg.partition()
                 
                 if value is None:
                     print(f"Received a message with no value. Key={key}")
                     continue
 
-                print(f"Consumed event from topic {msg.topic()}, key={key}, value={value}")
+                print(f"Consumed event from topic {msg.topic()}, partition={partition}, key={key}, value={value}")
                 self.process_message(value)
                 
         except KeyboardInterrupt:

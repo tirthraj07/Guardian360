@@ -1,1 +1,7 @@
 confluent_kafka
+python-dotenv
+supabase
+firebase_admin
+Flask
+Flask-SocketIO
+Flask-Cors

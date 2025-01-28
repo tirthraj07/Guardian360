@@ -1,5 +1,12 @@
 import threading
 
+# Import daemon server
+from daemon_server.server import app, socketio
+
+# Load environment variables
+from dotenv import load_dotenv
+load_dotenv()
+
 # Import the Queue
 from queue_manager import PriorityQueueManager
 
@@ -21,11 +28,18 @@ def start_consumers():
     threading.Thread(target=travel_alert_consumer.start, daemon=True).start()
     threading.Thread(target=generic_alert_consumer.start, daemon=True).start()
 
+def start_flask():
+    print("Daemon Server running on Port 3000")
+    socketio.run(app, host="0.0.0.0", port=3000)
 
 if __name__ == "__main__":
     # Start consumers
     start_consumers()
     print("Consumers started. Processing messages...")
+
+    # Start Flask app in a separate thread
+    flask_thread = threading.Thread(target=start_flask, daemon=True)
+    flask_thread.start()
 
     # Process the priority queue in the main thread
     try:

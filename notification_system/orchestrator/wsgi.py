@@ -1,6 +1,6 @@
 '''
 TODO:
-- To Send message to Kafka and test it
+- To Send messages
 '''
 
 from app import create_app
