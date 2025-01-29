@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Guardians360 - Location Alert</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4; 
+      color: #333;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      background-color: #ffc107; /* Yellow for caution */
+      color: #333;
+      padding: 20px;
+      text-align: center;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+    }
+    .content {
+      padding: 20px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    .code {
+      font-size: 18px;
+      font-weight: bold;
+      display: inline-block;
+      padding: 10px;
+      background-color: #f3f4f6;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    .footer {
+      font-size: 14px;
+      color: #888;
+      text-align: center;
+      margin-top: 20px;
+      border-top: 1px solid #eee;
+      padding: 10px;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>Location Alert - Guardians360</h2>
+    </div>
+    <div class="content">
+      <p>Dear {{ recipient_full_name }},</p>
+      <p>
+        We have detected a potential safety concern at the current location. 
+      </p>
+      <p>
+        <strong>Please proceed with caution or consider changing your route.</strong>
+      </p>
+      <p class="code">{{ message }}</p> 
+      <p>
+        For your safety, we recommend:
+        <ul>
+          <li>Being aware of your surroundings.</li>
+          <li>Avoiding isolated areas.</li>
+          <li>Staying in well-lit and populated areas.</li>
+          <li>Trusting your instincts.</li>
+        </ul>
+      </p>
+    </div>
+    <div class="footer">
+      <p>&copy; 2025 Guardians360. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>

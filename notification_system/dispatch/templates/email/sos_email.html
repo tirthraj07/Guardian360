@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Guardians360 - SOS</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+      }
+      .header {
+        background-color: #e80707; /* Dark blue background */
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-weight: bold; /* Bold title */
+        font-size: 24px;
+      }
+      .content {
+        padding: 20px;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      .code {
+        font-size: 24px;
+        font-weight: bold;
+        display: inline-block;
+        padding: 10px;
+        background-color: #f3f4f6;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+      .footer {
+        font-size: 14px;
+        color: #888;
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h3 style="color: white">SOS ALERT - Guardian360</h3>
+      </div>
+
+      <!-- Body -->
+      <div class="content">
+        <p>Dear <strong>{{ recipient_full_name }}</strong>,</p>
+        <p>
+          This is to inform you that a <strong>SOS ALERT</strong> has been
+          triggered!
+        </p>
+        <p>Urgent Action Required:</p>
+        <p class="code">{{ message }}</p>
+        <p>
+          Please locate the user as soon as possible. You can use the
+          Guardian360 app to track their location.
+        </p>
+        <p>Contact the user and relevant authorities immediately.</p>
+      </div>
+      <div class="footer">
+        <p>&copy; 2025 Guardians360. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

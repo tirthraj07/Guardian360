@@ -1,17 +1,32 @@
-import queue
+from models.notification_types_model import NotificationTypesEnum
+from repository.user_repository import UserRepository
+import requests
 
-# Define a queue for communication (this can be a global variable or passed around as needed)
-sms_queue = queue.Queue()
+EXPRESS_SERVER_URL = "http://localhost:3000/queue_sms"
 
-# TODO: get phone number from recipient_id and then send it via websocket
 
-def send_sms(recipient, message, event_type):
-    # Create an object to hold the SMS data
-    sms_data = {
-        'recipient': recipient,
-        'message': message,
-        'event_type': event_type
-    }
-    # Add the data to the queue
-    sms_queue.put(sms_data)
-    print(f"SMS data added to queue: {sms_data}")
+def send_sms(recipient_id, message, event_type):
+    try:
+        notification_type = NotificationTypesEnum[event_type].name
+        notification_type_id = NotificationTypesEnum[event_type].value
+        recipient:dict = UserRepository.get_user_by_id(recipient_id)
+        recipient_no = recipient.get("phone_no", "").strip() 
+
+        # Remove spaces from phone number
+        recipient_no = recipient_no.replace(" ", "")
+            
+        sms_data = {
+            'recipient': recipient_no,
+            'message': message,
+            'event_type': event_type
+        }
+        response = requests.post(EXPRESS_SERVER_URL, json=sms_data)
+        
+        if response.status_code == 200:
+            print(f"SMS data sent to Express server: {sms_data}")
+        else:
+            print(f"Failed to send SMS data. Status Code: {response.status_code}, Response: {response.text}")
+    except Exception as e:
+        print("Unable to add sms to sms queue")
+        print(f"Args: \nrecipient_id : {recipient_id}\nmessage: {message}\nevent_type: {event_type}")
+        print(f"Error: {e}")

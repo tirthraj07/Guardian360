@@ -5,3 +5,5 @@ firebase_admin
 Flask
 Flask-SocketIO
 Flask-Cors
+google-auth
+jinja2
