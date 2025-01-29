@@ -12,12 +12,9 @@ def generate_answer(prompt):
         # model = genai.GenerativeModel(model_name="gemini-pro")
         answer = model.generate_content(prompt)
 
-        
-
         generated_text = answer._result.candidates[0].content.parts[0].text
         print(generated_text.strip('\n').strip().strip('```').strip('json').strip('```'))
         formatted_response = json.loads(generated_text.strip('\n').strip().strip('```').strip('json').strip('```').strip('\n').strip())
-        
         
         return formatted_response
     

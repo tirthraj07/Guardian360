@@ -29,9 +29,9 @@ class PoliceRegionsRepository:
             result["_id"] = str(result["_id"])
             
             # Convert the result to JSON
-            return json.dumps(result, indent=4)  
+            return result
         else:
-            return json.dumps({"message": "No region found"}, indent=4)
+            return {"message": "No region found"}
 
     @staticmethod
     def add_report_to_police_region_by_id(_id: str, report_id:str):

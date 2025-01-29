@@ -4,6 +4,7 @@ from fastapi import HTTPException, status
 
 from app.repository.current_location_repository import CurrentLocationRepository
 from app.repository.travel_mode_repository import TravelModeDetailsRepository
+from app.repository.police_regions_repository import PoliceRegionsRepository
 from app.models.location_models import UserLocationData
 
 class LocationService:
@@ -15,10 +16,10 @@ class LocationService:
         timestamp = request.timestamp
         travel_details = request.travel_details
 
-        print("Location")
-
         CurrentLocationRepository.update_location(userID, latitude, longitude, timestamp)
         print(f"Location updated: UserID {userID}, Lat {latitude}, Long {longitude}, Time {timestamp}")
+
+        police_region = PoliceRegionsRepository.find_police_region(latitude, longitude)
 
         if travel_details is not None:
             source_latitude = travel_details.location_details.source.latitude
@@ -65,7 +66,10 @@ class LocationService:
                         print(f"Exception: {e}")
         else:
             print("Travel Mode Off")
-            # Update isValid or delete row
+
+        return {"message" : "Location Received", "police_region_id" :  police_region['_id']}
+        
+        
 
     @staticmethod
     def get_friends_location(userID: int):

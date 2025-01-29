@@ -28,11 +28,8 @@ class IncidentReportsRepository:
         police_station = PoliceRegionsRepository.find_police_region(latitude, longitude)
 
         print("Police Station Found")
-        police_region_data = json.loads(police_station)
-        
-        print(police_region_data)
-
-        response = PoliceRegionsRepository.add_report_to_police_region_by_id(police_region_data['_id'], str(response.inserted_id))
+    
+        response = PoliceRegionsRepository.add_report_to_police_region_by_id(police_station['_id'], str(response.inserted_id))
 
         return response
         
