@@ -15,6 +15,8 @@ class LocationService:
         timestamp = request.timestamp
         travel_details = request.travel_details
 
+        print("Location")
+
         CurrentLocationRepository.update_location(userID, latitude, longitude, timestamp)
         print(f"Location updated: UserID {userID}, Lat {latitude}, Long {longitude}, Time {timestamp}")
 
