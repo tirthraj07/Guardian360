@@ -4,6 +4,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:sms_to_webhook/services/sms_service.dart';
+// websocket package
+import 'package:web_socket_channel/web_socket_channel.dart';
+
 
 void main() {
   runApp(const SmsApp());
@@ -36,9 +40,13 @@ class _SmsHomePageState extends State<SmsHomePage> {
   String _latestMessage = "Waiting for new SMS...";
   String _messageSender = "";
   String? _webhookUrl;
+  String? _websocketUrl;
   Timer? _timer;
-
+  final SmsService smsService = SmsService();
   String? _lastProcessedMessage; // Tracks the last processed SMS content
+
+  // WebSocket instance
+  WebSocketChannel? _webSocketChannel;
 
   @override
   void initState() {
@@ -74,7 +82,7 @@ class _SmsHomePageState extends State<SmsHomePage> {
       if (messages.isNotEmpty && mounted) {
         final latestMessage = messages.first.body ?? "No content";
         final sender = messages.first.address ?? "Unknown sender";
-
+        print("Fetching SMS..");
         // Send only if the message is new
         if (latestMessage != _lastProcessedMessage) {
           setState(() {
@@ -126,19 +134,71 @@ class _SmsHomePageState extends State<SmsHomePage> {
 
     setState(() {
       _webhookUrl = "http://$hostname:$port/receive_sms";
+      _websocketUrl = "ws://$hostname:$port";
     });
 
     debugPrint("Webhook URL set to: $_webhookUrl");
+    debugPrint("Websocket URL set to: $_websocketUrl");
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text("Webhook URL set to: $_webhookUrl")),
     );
 
     _startPollingForSms();
+    // start web socket connection
+    _connectWebSocket();
+  }
+
+  void _connectWebSocket() {
+    if (_websocketUrl == null) return;
+
+    // final wsUrl = _webhookUrl!.replaceFirst("http", "ws"); // Convert http to ws
+    final wsUrl = _websocketUrl!;
+    debugPrint("Websocket url : $wsUrl");
+    try {
+      _webSocketChannel = WebSocketChannel.connect(Uri.parse(wsUrl));
+      debugPrint("WebSocket connection established: $wsUrl");
+
+      // Listen for incoming messages from the WebSocket server
+      _webSocketChannel!.stream.listen(
+            (message) {
+          debugPrint("WebSocket message received: $message");
+          try {
+            // Decode JSON message
+            final Map<String, dynamic> data = jsonDecode(message);
+
+            // Extract variables
+            String recipient = data["recipient"] ?? "";
+            String smsMessage = data["message"] ?? "";
+            String eventType = data["event_type"] ?? "";
+
+            // Print extracted values
+            debugPrint("Recipient: $recipient");
+            debugPrint("Message: $smsMessage");
+            debugPrint("Event Type: $eventType");
+
+            smsService.sendMessage(recipient, smsMessage);
+
+          } catch (e) {
+            debugPrint("Error parsing WebSocket message: $e");
+          }
+
+        },
+        onDone: () {
+          debugPrint("WebSocket connection closed");
+        },
+        onError: (error) {
+          debugPrint("WebSocket error: $error");
+        },
+      );
+    } catch (e) {
+      debugPrint("Error connecting to WebSocket: $e");
+    }
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _webSocketChannel?.sink.close(); // Close WebSocket connection
     _hostnameController.dispose();
     _portController.dispose();
     super.dispose();
