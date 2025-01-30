@@ -116,6 +116,16 @@ const verify_verification_code = async (email, code) => {
     }
 }
 
+// update device_token
+const update_user_device_token = async (userID, device_token) => {
+    try {
+        const result = await UserRepository.update_user_device_token(userID, device_token);
+        return result;
+    } catch (error) {
+        return error;
+    }
+}
+
 module.exports = {
     get_user_by_email,
     get_user_by_userid,
@@ -124,5 +134,6 @@ module.exports = {
     add_user,
     get_keypair_by_email,
     send_verification_code,
-    verify_verification_code
+    verify_verification_code,
+    update_user_device_token
 };

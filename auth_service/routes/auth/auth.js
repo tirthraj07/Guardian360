@@ -91,11 +91,30 @@ auth_router.post('/signup', async (req,res)=>{
 
 });
 
+/* 
+
+POST /auth/login
+
+BODY
+{
+    "email": "user@domain.com",
+    "code": "123abc",
+    "device_token": "xyz" | null
+}
+
+*/
+
+
 auth_router.post('/login', async (req,res)=>{
-    let {email, code} = req.body;
+    let {email, code, device_token} = req.body;
     if(!email || !code){
         res.status(400).json({status:"error", message:"All fields are required: email, code"});
         return;
+    }
+
+    // marking device_token as optional
+    if(!device_token || device_token === "" || device_token.toString().toLowerCase() === "null" || device_token === "undefined"){
+        device_token = null;
     }
 
     try{
@@ -106,6 +125,13 @@ auth_router.post('/login', async (req,res)=>{
             return;
         }
         const user = await UserService.get_user_by_email(email);
+        
+        if (device_token !== null){
+            console.log("Updating device token..")
+            await UserService.update_user_device_token(user.userID, device_token)
+            console.log("device token updated")
+        }
+        
         const jwt = new JSON_WEB_TOKEN();
         const payload = jwt.createPayload(user.userID, user.email);
         const userToken = jwt.createToken(payload);
