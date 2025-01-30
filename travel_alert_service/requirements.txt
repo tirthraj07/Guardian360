@@ -1,0 +1,11 @@
+pymongo
+pydantic
+fastapi
+sqlalchemy
+fastapi_mail
+python-jose
+python-dotenv
+anthropic
+ollama
+uvicorn
+supabase
