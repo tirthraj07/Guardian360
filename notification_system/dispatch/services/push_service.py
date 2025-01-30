@@ -8,7 +8,6 @@ def send_push(recipient, message, event_type):
         fcm_token = user.get("device_token")
         print(user)
         print(fcm_token)
-        message="Hello Message From Tirthraj Mahajan"
         res = FirebaseCloudMessaging.send_push_notification(device_token=fcm_token,title=event_type, body=message,alert_type=event_type)
         print(f"Response: {res}")
         print(f"Push Notification Sent! Recipient {recipient} Message {message}")
