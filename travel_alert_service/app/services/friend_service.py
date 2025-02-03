@@ -85,3 +85,26 @@ class FriendService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"An unexpected error occurred: {str(e)}"
             )
+        
+    @staticmethod
+    def get_friends_details(userID):
+        try:
+            users = UsersRepository.get_friends_details(userID)
+            friends = [
+                FriendsAvailable(
+                    userID=user['userID'],
+                    email=user['email'],
+                    first_name=user['first_name'],
+                    last_name=user['last_name'],
+                    phone_no=user['phone_no'],
+                    profile_pic_location=user['profile_pic_location']
+                ) for user in users
+            ]
+
+            return {"friends": friends}
+        
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"An unexpected error occurred: {str(e)}"
+            )

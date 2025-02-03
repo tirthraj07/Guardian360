@@ -39,3 +39,28 @@ class UsersRepository:
         ]
 
         return available_users
+    
+    
+    @staticmethod
+    def get_friends_details(userID):
+        
+        friends_of_user = supabase.table("friend_relations") \
+            .select("friendID") \
+            .eq("userID", userID) \
+            .execute()
+
+        # Debugging: Print the friends_of_user data
+        print(f"Friends of user {userID}: {friends_of_user.data}")
+
+        friend_ids = [friend['friendID'] for friend in friends_of_user.data]
+        
+            # Query user details for each friend
+        users = []
+        for friend_id in friend_ids:
+                user = supabase.table("users").select("*").eq("userID", friend_id).execute()
+                users.append(user.data[0])  # Assuming one user per friend_id
+        
+        # Debugging: Print the users data
+
+        return users
+    

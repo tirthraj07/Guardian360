@@ -27,3 +27,7 @@ def accept_friend_request(request: FriendRequest):
 @router.post('/pending-requests')
 def get_pending_requests_route(request: SeeAvaialableFriendRequest):
     return FriendService.fetch_pending_requests(request.userID)
+
+@router.get('/{userID}')
+def get_all_friends(userID: int):
+    return FriendService.get_friends_details(userID)
