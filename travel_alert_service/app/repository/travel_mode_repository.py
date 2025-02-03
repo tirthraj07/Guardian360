@@ -17,8 +17,16 @@ class TravelModeDetailsRepository:
         return {"valid": True, "message": "Details updated"} if response.data else {"valid": False, "message": "Failed to update details"}
 
     @staticmethod
-    def check_if_details_exists(user_id):
-        response = supabase.table("travel_mode_details").select("*").eq("userID", user_id).execute()
+    def check_if_details_exists(user_id, source_latitude, source_longitude, destination_latitude, destination_longitude):
+        response = supabase.table("travel_mode_details")\
+                                .select("*")\
+                                .eq("userID", user_id)\
+                                .eq("isValid", True)\
+                                .eq("source_latitude",source_latitude)\
+                                .eq("source_longitude", source_longitude)\
+                                .eq("destination_latitude", destination_latitude)\
+                                .eq("destination_longitude",destination_longitude)\
+                                .execute()
         return len(response.data) > 0
 
     @staticmethod
