@@ -12,6 +12,13 @@ class UsersRepository:
         return user.data[0] if user.data else None
     
     @staticmethod
+    def get_users_by_ids(user_ids):
+        if not user_ids:
+            return []
+        users = supabase.table("users").select("userID, first_name, last_name, email, phone_no").in_("userID", user_ids).execute()
+        return users.data if users.data else []
+
+    @staticmethod
     def get_available_friends(userID):
         friends_of_user = supabase.table("friend_relations") \
             .select("friendID") \

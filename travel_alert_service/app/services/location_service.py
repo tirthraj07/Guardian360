@@ -7,6 +7,7 @@ from app.repository.current_location_repository import CurrentLocationRepository
 from app.repository.travel_mode_repository import TravelModeDetailsRepository
 from app.repository.police_regions_repository import PoliceRegionsRepository
 from app.repository.user_cache_repository import UserCacheRepository
+from app.repository.user_repository import UsersRepository
 
 # Models
 from app.models.location_models import UserLocationData
@@ -124,6 +125,42 @@ class LocationService:
         )
 
     @staticmethod
+    def get_friends_location(userID: int):
+        print(f"Fetching friends' locations for UserID: {userID}")
+        # before:
+        # response = CurrentLocationRepository.get_friends_location(userID)
+        # we now cannot directly fetch from db. Instead check cache first for the most recent location update
+        friend_ids = CurrentLocationRepository.get_friend_ids(user_id=userID)
+        if not friend_ids:
+            return []
+
+        users = UsersRepository.get_users_by_ids(user_ids=friend_ids)
+        user_map = {user["userID"]: user for user in users}
+    
+        # Check the cache for the friend's current location
+        cached_locations = {}
+        for friend_id in friend_ids:
+            cached_location = UserCacheRepository.get_user_location(friend_id)
+            if cached_location:
+                cached_locations[friend_id] = cached_location
+
+        # Find missing locations (not in cache)
+        missing_friend_ids = [fid for fid in friend_ids if fid not in cached_locations]
+        db_locations = CurrentLocationRepository.get_location_by_user_ids(user_ids=missing_friend_ids)
+
+        for loc in db_locations:
+            cached_locations[loc["userID"]] = loc
+
+        response = []
+        for friend_id in friend_ids:
+            if friend_id in user_map:  # ✅ Ensure the user exists
+                user_info = user_map[friend_id].copy()
+                user_info["location"] = cached_locations.get(friend_id)
+                response.append(user_info)
+
+        return response
+
+    @staticmethod
     def _send_first_travel_notification(userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp):
         TravelModeDetailsRepository.add_location_details(
             userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp.isoformat()
@@ -154,8 +191,4 @@ class LocationService:
         except ValueError as e:
             print(f"Error parsing last_notification_timestamp: {last_timestamp_str} | Exception: {e}")
 
-    @staticmethod
-    def get_friends_location(userID: int):
-        response = CurrentLocationRepository.get_friends_location(userID)
-        print(f"Fetching friends' locations for UserID: {userID}")
-        return response
+
