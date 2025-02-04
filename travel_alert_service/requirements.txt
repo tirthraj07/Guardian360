@@ -9,3 +9,4 @@ anthropic
 ollama
 uvicorn
 supabase
+redis
