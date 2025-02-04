@@ -23,7 +23,8 @@ class LocationService:
         # The function `track_location` should take long, lat, timestamp and travel_details as arguments. Do not extract them at this level. BAD PRACTICE.
         latitude = request.latitude
         longitude = request.longitude
-        timestamp = request.timestamp
+        timestamp = (request.timestamp).isoformat()
+        
         travel_details = request.travel_details
 
         # Check if user exists and also check if we should update the db after timeout specified by UserCacheRepository.LOCATION_TTL
@@ -40,6 +41,11 @@ class LocationService:
 
             # Update the police region in cache
             police_region = PoliceRegionsRepository.find_police_region(latitude, longitude)
+            print(police_region)
+            if police_region.get("status") != "success":
+                print("Error while fetching police_regions")
+                police_region["_id"] = None
+
             police_region_id = police_region['_id']
             UserCacheRepository.set_police_region(
                 user_id=userID, 
@@ -61,16 +67,21 @@ class LocationService:
         police_region_id = UserCacheRepository.get_police_region(userID)
 
         # If not found in cache, fetch from DB and update cache
+        '''
         if not police_region_id:
             police_region = PoliceRegionsRepository.find_police_region(latitude, longitude)
+            if police_region.get("status") != "success":
+                print("Error while fetching police_regions")
+                police_region["_id"] = None
             police_region_id = police_region["_id"]
             UserCacheRepository.set_police_region(
                 user_id=userID, 
                 police_region_id=police_region_id
             )
+        '''
 
         # Handling travel mode cases seperately. Makes the code look cleaner
-        LocationService.handle_travel_mode(
+        travel_mode = LocationService.handle_travel_mode(
             userID=userID,
             travel_details=travel_details, 
             timestamp=timestamp,
@@ -78,14 +89,15 @@ class LocationService:
             current_longitude=longitude
         )
 
-        return {"message" : "Location Received", "police_region_id" :  police_region_id}
+        return {"message" : "Location Received", "police_region_id" :  police_region_id, "travel_mode" : travel_mode}
         
     @staticmethod
     def handle_travel_mode(userID, travel_details, timestamp, current_latitude, current_longitude):
         
+        THRESHOLD_DISTANCE = 40  # in metres
         if not travel_details:
             print("Travel Mode Off")
-            return
+            return False
         
         location_details = travel_details.location_details
         vehicle_details = travel_details.vehicle_details
@@ -94,16 +106,16 @@ class LocationService:
         dest_lat, dest_long = location_details.destination.latitude, location_details.destination.longitude
         notification_frequency = location_details.notification_frequency
         vehicle_number, mode_of_travel = vehicle_details.vehicle_number, vehicle_details.mode_of_travel
+        distance_to_destination = travel_details.distance_to_destination
+
+        
 
         # Log travel details
         print(f"Travel details received: \n"
               f"Source({source_lat}, {source_long}) → Destination({dest_lat}, {dest_long})\n"
-              f"Mode: {mode_of_travel}, Vehicle: {vehicle_number}, Frequency: {notification_frequency} mins")
-
-        '''
-        before: 
-            send_first_notification = not TravelModeDetailsRepository.check_if_details_exists(userID)            
-        '''
+              f"Mode: {mode_of_travel}, Vehicle: {vehicle_number}, Frequency: {notification_frequency} mins\n"
+              f"Distance to Destination : {distance_to_destination}"
+              )
 
         # Check if travel mode is ON and if the source and destination location are same. if they are different, user must have changed the travel mode.
         
@@ -123,6 +135,10 @@ class LocationService:
         LocationService._send_periodic_travel_notification(
             userID, source_lat, source_long, dest_lat, dest_long, notification_frequency, timestamp
         )
+
+        if distance_to_destination < THRESHOLD_DISTANCE:
+            return False
+        return True
 
     @staticmethod
     def get_friends_location(userID: int):
@@ -163,7 +179,7 @@ class LocationService:
     @staticmethod
     def _send_first_travel_notification(userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp):
         TravelModeDetailsRepository.add_location_details(
-            userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp.isoformat()
+            userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp
         )
         print("\n\nFirst Notification Sent.")
         NotificationServiceUtils.send_travel_alert_notification(
@@ -180,13 +196,14 @@ class LocationService:
 
         try:
             last_timestamp = datetime.fromisoformat(last_timestamp_str)
-            time_difference = (timestamp - last_timestamp).total_seconds()
+            timestamp_iso = datetime.fromisoformat(timestamp)
+            time_difference = (timestamp_iso - last_timestamp).total_seconds()
             print(f"Time since last notification: {time_difference} seconds")
 
             if time_difference >= interval_seconds:
                 print("\n\nNotification sent.")
                 TravelModeDetailsRepository.add_location_details(
-                    userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp.isoformat()
+                    userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp
                 )
         except ValueError as e:
             print(f"Error parsing last_notification_timestamp: {last_timestamp_str} | Exception: {e}")

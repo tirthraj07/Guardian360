@@ -29,6 +29,7 @@ class VehicleDetails(BaseModel):
 class TravelDetails(BaseModel):
     location_details: LocationDetails
     vehicle_details: VehicleDetails
+    distance_to_destination: float
 
 
 class UserLocationData(BaseModel):

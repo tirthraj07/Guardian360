@@ -11,7 +11,9 @@ class UserCacheRepository:
             "longitude": longitude,
             "timestamp": timestamp
         }
-        redis_client.set(f"user_location:{user_id}", json.dumps(location_data), ex=3600)
+        json_location_data = json.dumps(location_data)
+        print(json_location_data)
+        redis_client.set(f"user_location:{user_id}", json_location_data, ex=3600)
 
     @staticmethod
     def get_user_location(user_id: int):

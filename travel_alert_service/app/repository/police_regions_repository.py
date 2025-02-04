@@ -29,13 +29,14 @@ class PoliceRegionsRepository:
             
             # Check if the result is found
             if result:
+                result["status"] = "success"
                 result["_id"] = str(result["_id"])  # Convert _id to string for JSON compatibility
                 print("\n\n\n\n\n\n")
                 print(result)
                 return result
             else:
                 # If no region is found, return a custom error message
-                return {"message": "Place not found"}
+                return {"status":"error","message": "Place not found"}
             
         except errors.PyMongoError as e:
             # Handle any database-related errors

@@ -7,7 +7,7 @@ class CurrentLocationRepository:
             "userID": user_id,
             "latitude": latitude,
             "longitude": longitude,
-            "timestamp": timestamp.isoformat()
+            "timestamp": timestamp
         }).execute()
         return {"valid": True, "message": "Location updated"} if response.data else {"valid": False, "message": "Failed to update location"}
 
