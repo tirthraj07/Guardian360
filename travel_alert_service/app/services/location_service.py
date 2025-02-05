@@ -16,7 +16,7 @@ from app.models.location_models import UserLocationData
 from app.utils.guardian360_notification_utils.client import Guardian360NotificationClient
 
 notification_client = Guardian360NotificationClient(
-    base_url="localhost:9000"
+    base_url="http://143.110.183.53/notification-service"
 )
 
 class LocationService:
@@ -93,14 +93,12 @@ class LocationService:
             current_longitude=longitude
         )
 
-
-
         return {"message" : "Location Received", "police_region_id" :  police_region_id, "travel_mode" : travel_mode}
         
     @staticmethod
     def handle_travel_mode(userID, travel_details, timestamp, current_latitude, current_longitude):
         
-        THRESHOLD_DISTANCE = 40  # in metres
+        THRESHOLD_DISTANCE = 400  # in metres
         if not travel_details:
             print("Travel Mode Off")
             return False
@@ -123,6 +121,7 @@ class LocationService:
               f"Distance to Destination : {distance_to_destination}"
               )
 
+
         # Check if travel mode is ON and if the source and destination location are same. if they are different, user must have changed the travel mode.
         
         send_first_notification = not TravelModeDetailsRepository.check_if_details_exists(
@@ -143,6 +142,9 @@ class LocationService:
         )
 
         if distance_to_destination < THRESHOLD_DISTANCE:
+            print("\n\n\nTurning off Travel Mode Automatically")
+            print("You have reached your destination !!!")
+            TravelModeDetailsRepository.turnOffTravelMode(userID)
             return False
         return True
 
@@ -190,9 +192,16 @@ class LocationService:
             userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp
         )
         print("\n\nFirst Notification Sent.")
+
+        user_details = UsersRepository.get_user_by_id(userID)
+
+        source_location = f"https://www.google.com/maps?q={source_lat},{source_long}"
+        destination_location = f"https://www.google.com/maps?q={dest_lat},{dest_long}"
+
         notification_client.send_travel_alert_notification(
             user_id=userID,
-            message=f"User ID : {userID} has Started Travelling"
+            message= f"{user_details['first_name']} is traveling. You'll be notified again in {frequency} mins.",
+            email_message=f"""{user_details['first_name']} has started traveling. You can track their journey in real time via our app.Stay updated with live location and notifications.\n\nSource Location\n{source_location}\n\Destination Location\n{destination_location}"""
         )
 
     @staticmethod
@@ -214,9 +223,14 @@ class LocationService:
                 TravelModeDetailsRepository.add_location_details(
                     userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp
                 )
+                user_details = UsersRepository.get_user_by_id(userID)
+
+                source_location = f"https://www.google.com/maps?q={source_lat},{source_long}"
+                destination_location = f"https://www.google.com/maps?q={dest_lat},{dest_long}"
+
                 notification_client.send_travel_alert_notification(
                     user_id=userID,
-                    message=f"User ID : {userID} has Complted Periodic Travel of duration : {interval_seconds}"
+                    message=f"{frequency} mins have passed. Check {user_details['first_name']}'s location for safety."
                 )
         except ValueError as e:
             print(f"Error parsing last_notification_timestamp: {last_timestamp_str} | Exception: {e}")

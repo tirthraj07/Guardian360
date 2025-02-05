@@ -33,3 +33,10 @@ class TravelModeDetailsRepository:
     def check_last_message_timestamp(user_id):
         response = supabase.table("travel_mode_details").select("last_notification_timestamp").eq("userID", user_id).execute()
         return response.data[0]["last_notification_timestamp"] if response.data else None
+    
+    @staticmethod
+    def turnOffTravelMode(user_id):
+        response = (supabase.table("travel_mode_details").update({"isValid" : False}).eq("userID", user_id).execute())
+        print(response)
+        return None
+

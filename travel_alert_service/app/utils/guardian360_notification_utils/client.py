@@ -18,7 +18,7 @@ from .models import NotificationModel, EventTypes, EventMetadata
 # Logging Configuration
 logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
-    level=logging.INFO
+    level=logging.ERROR
 )
 
 class Guardian360NotificationClient:
