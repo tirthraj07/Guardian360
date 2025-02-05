@@ -12,7 +12,6 @@ class GenericAlertEventHandler(EventHandler):
     def process_recipients(self):
         recipient_ids:list = self.metadata.get('recipient_ids', None)
         
-
         if recipient_ids is None or len(recipient_ids) == 0:
             raise Exception("Metadata required. metadata : {recipient_ids: []}")
         
@@ -54,4 +53,8 @@ class GenericAlertEventHandler(EventHandler):
             "priority": self.priority,
             "message": self.message,
             "recipients": self.recipients_data,
+            "email_message" : self.email_message,
+            "sms_message" : self.sms_message,
+            "inapp_message" : self.inapp_message,
+            "push_message" : self.push_message
         }

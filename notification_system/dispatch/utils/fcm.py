@@ -28,7 +28,7 @@ class FirebaseCloudMessaging:
             SERVICE_ACCOUNT_FILE, scopes=SCOPES
         )
         credentials.refresh(Request())
-        print("OAuth Access Token:", credentials.token)
+        # print("OAuth Access Token:", credentials.token)
         return credentials.token
 
     @staticmethod
@@ -42,9 +42,9 @@ class FirebaseCloudMessaging:
             "Authorization": f"Bearer {token}",
             "Content-Type": "application/json"
         }
-        print(f"Header\n{headers}\n\n")
+        # print(f"Header\n{headers}\n\n")
 
-        print(f"Device token :\n{device_token}\n\n\n")
+        # print(f"Device token :\n{device_token}\n\n\n")
 
         payload = {
             "message": {
@@ -60,7 +60,7 @@ class FirebaseCloudMessaging:
             }
         }
 
-        print(f"Payload\n{payload}\n\n\n")
+        # print(f"Payload\n{payload}\n\n\n")
         
         response = requests.post(FirebaseCloudMessaging.FCM_URL, headers=headers, json=payload)
         print(response)
@@ -69,5 +69,5 @@ class FirebaseCloudMessaging:
             print("Notification sent successfully!")
             return response.json()
         else:
-            print(f"Failed to send notification: {response.status_code}, {response.text}")
+            print(f"ERROR: Failed to send push notification: \n\n\n{response.status_code}, {response.text}")
             return None

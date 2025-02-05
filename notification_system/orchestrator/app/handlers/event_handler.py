@@ -12,7 +12,14 @@ class EventHandler(ABC):
         self.message = notification.message
         self.timestamp = notification.timestamp
         self.metadata = notification.metadata
+        
+        self.email_message = notification.email_message
+        self.sms_message = notification.sms_message
+        self.inapp_message = notification.inapp_message
+        self.push_message = notification.push_message
+        
         self.kafka_message = None
+        
 
     @abstractmethod
     def process_recipients(self):

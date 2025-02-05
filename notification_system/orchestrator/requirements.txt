@@ -6,3 +6,5 @@ Flask-Cors
 python-dotenv
 Werkzeug
 kafka-python
+kafka-python-ng
+typing

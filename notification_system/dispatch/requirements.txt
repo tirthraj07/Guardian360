@@ -7,3 +7,5 @@ Flask-SocketIO
 Flask-Cors
 google-auth
 jinja2
+kafka-python-ng
+typing

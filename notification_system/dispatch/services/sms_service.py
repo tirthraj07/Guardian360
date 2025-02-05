@@ -7,6 +7,7 @@ EXPRESS_SERVER_URL = "http://localhost:3000/queue_sms"
 
 def send_sms(recipient_id, message, event_type):
     try:
+        print(f"Processing send_sms request for: \n\trecipient_id: {recipient_id}\n\tmessage: {message}\n\tevent_type: {event_type}")
         notification_type = NotificationTypesEnum[event_type].name
         notification_type_id = NotificationTypesEnum[event_type].value
         recipient:dict = UserRepository.get_user_by_id(recipient_id)

@@ -3,6 +3,7 @@ from models.notification_types_model import NotificationTypesEnum
 
 def send_inapp(recipient, message, event_type):
     try:
+        print(f"Processing send_inapp request for: \n\trecipient_id: {recipient}\n\tmessage: {message}\n\tevent_type: {event_type}")
         notification_type = NotificationTypesEnum[event_type].name
         notification_type_id = NotificationTypesEnum[event_type].value
         InAppNotificationsRepository.add_notification(recipient, notification_type_id, message)

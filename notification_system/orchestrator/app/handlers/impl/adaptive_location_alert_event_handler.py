@@ -11,11 +11,11 @@ class AdaptiveLocationAlertEventHandler(EventHandler):
     def process_recipients(self):
         user_id = self.metadata.get('userID', None)
         location:dict = self.metadata.get('location', None)
-        latitude = location.get('lat', None)
-        longitude = location.get('long', None)
+        latitude = location.get('lat', None) if location else None
+        longitude = location.get('long', None) if location else None
 
-        if user_id is None or location is None or latitude is None or longitude is None:
-            raise Exception("Metadata required. metadata : {userID, location: {lat, long}}")
+        if user_id is None:
+            raise Exception("Metadata required. metadata : {userID (MANDATORY), location: {lat, long} (OPTIONAL)}")
         
         self.recipients = [user_id]
 
@@ -54,5 +54,10 @@ class AdaptiveLocationAlertEventHandler(EventHandler):
             "priority": self.priority,
             "message": self.message,
             "recipients": self.recipients_data,
+            
+            "email_message" : self.email_message,
+            "sms_message" : self.sms_message,
+            "inapp_message" : self.inapp_message,
+            "push_message" : self.push_message
         }
 

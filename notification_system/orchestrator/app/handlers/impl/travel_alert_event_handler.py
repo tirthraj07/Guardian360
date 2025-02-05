@@ -12,8 +12,8 @@ class TravelAlertEventHandler(EventHandler):
         user_id = self.metadata.get('userID', None)
         location_id = self.metadata.get('location_id', None)
 
-        if user_id is None or location_id is None:
-            raise Exception("Metadata required. metadata : {userID, location_id}")
+        if user_id is None:
+            raise Exception("Metadata required. metadata : {userID (MANDATORY), location_id:(OPTIONAL)}")
         
         friend_ids = UserService.get_friend_ids(user_id)
     
@@ -54,4 +54,9 @@ class TravelAlertEventHandler(EventHandler):
             "priority": self.priority,
             "message": self.message,
             "recipients": self.recipients_data,
+            
+            "email_message" : self.email_message,
+            "sms_message" : self.sms_message,
+            "inapp_message" : self.inapp_message,
+            "push_message" : self.push_message
         }
