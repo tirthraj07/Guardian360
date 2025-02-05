@@ -5,6 +5,7 @@ from templates.email.email_template import EmailTemplate
 
 def send_email(recipient_id, message, event_type):
     try:
+        print(f"Processing send_email request for: \n\trecipient_id: {recipient_id}\n\tmessage: {message}\n\tevent_type: {event_type}")
         notification_type = NotificationTypesEnum[event_type].name
         notification_type_id = NotificationTypesEnum[event_type].value
         recipient:dict = UserRepository.get_user_by_id(recipient_id)

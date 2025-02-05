@@ -3,14 +3,14 @@ from typing import Optional, Dict, List, Any
 from enum import Enum
 
 class EventTypes(Enum):
-    SOS = "SOS",
+    SOS = "SOS"
     ADAPTIVE_LOCATION_ALERT = "ADAPTIVE_LOCATION_ALERT"
     TRAVEL_ALERT = "TRAVEL_ALERT"
     GENERIC = "GENERIC"
 
 class EventMetadata(BaseModel):
     userID: Optional[int] = None
-    recipient_ids: Optional[List[int]] = None
+    recipient_ids: Optional[List[int]] = []
 
 
 class NotificationModel(BaseModel):

@@ -61,7 +61,7 @@ class Guardian360NotificationClient:
         self.send_notification(
             event_type=EventTypes.TRAVEL_ALERT,
             event_from="guardian.travel_service",
-            metadata={"userID": user_id, "location_id":10},
+            metadata={"userID": user_id},
             message=message,
             email_message=email_message, sms_message=sms_message,
             inapp_message=inapp_message, push_message=push_message
@@ -111,8 +111,8 @@ class Guardian360NotificationClient:
         ):
         """Handles the common notification sending logic."""
         try:
-            metadata_obj = metadata
-            # metadata_obj = EventMetadata(**metadata)
+            # metadata_obj = metadata
+            metadata_obj = EventMetadata(**metadata)
             logging.debug("metadata_obj:")
             logging.debug(metadata_obj)
             # metadata_dict = asdict(metadata_obj)
@@ -125,7 +125,7 @@ class Guardian360NotificationClient:
             event_type=event_type,
             event_from=event_from,
             message=message,
-            metadata=metadata_obj,
+            metadata=metadata_obj.dict(),
             email_message=email_message, sms_message=sms_message,
             inapp_message=inapp_message, push_message=push_message
         )
@@ -168,14 +168,17 @@ class Guardian360NotificationClient:
             logging.debug("Sending request to Notification Service..")
             logging.debug(f"POST {url}")
             logging.debug(f"Headers: {headers}")
-            logging.debug(f"Body: {request_body}")
-
+            
+            logging.debug(f"Body: {json.dumps(request_body.dict(), allow_nan=False)}")
+            
             response = requests.post(url, json=request_body.dict(), headers=headers)
-            response.raise_for_status()
-
             logging.debug("Response received from server:")
             logging.debug(response.json())
 
+            response.raise_for_status()
+
+            logging.info(f"Notification sent to Notification Service successfully")
+            
         except ValidationError:
             logging.error("Notification initialization failed due to invalid data.")
             raise NotificationIncorrectlyInitializedError()
