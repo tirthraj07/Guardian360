@@ -13,8 +13,8 @@ class CurrentLocationRepository:
 
     @staticmethod
     def get_friend_ids(user_id):
-        friends = supabase.table("friend_relations").select("friendID").eq("userID", user_id).execute()
-        friend_ids = [friend["friendID"] for friend in friends.data]
+        friends = supabase.table("friend_relations").select("userID").eq("friendID", user_id).execute()
+        friend_ids = [friend["userID"] for friend in friends.data]
         return friend_ids if friend_ids else []
     
     @staticmethod

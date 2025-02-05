@@ -13,7 +13,11 @@ from app.repository.user_repository import UsersRepository
 from app.models.location_models import UserLocationData
 
 # Utils
-from app.utils.notification_service import NotificationServiceUtils
+from app.utils.guardian360_notification_utils.client import Guardian360NotificationClient
+
+notification_client = Guardian360NotificationClient(
+    base_url="localhost:9000"
+)
 
 class LocationService:
     
@@ -89,6 +93,8 @@ class LocationService:
             current_longitude=longitude
         )
 
+
+
         return {"message" : "Location Received", "police_region_id" :  police_region_id, "travel_mode" : travel_mode}
         
     @staticmethod
@@ -150,6 +156,8 @@ class LocationService:
         if not friend_ids:
             return []
 
+        print(friend_ids)
+
         users = UsersRepository.get_users_by_ids(user_ids=friend_ids)
         user_map = {user["userID"]: user for user in users}
     
@@ -182,8 +190,9 @@ class LocationService:
             userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp
         )
         print("\n\nFirst Notification Sent.")
-        NotificationServiceUtils.send_travel_alert_notification(
-            user_id=userID, message=f"UserID: {userID} turned on travel mode"
+        notification_client.send_travel_alert_notification(
+            user_id=userID,
+            message=f"User ID : {userID} has Started Travelling"
         )
 
     @staticmethod
@@ -204,6 +213,10 @@ class LocationService:
                 print("\n\nNotification sent.")
                 TravelModeDetailsRepository.add_location_details(
                     userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp
+                )
+                notification_client.send_travel_alert_notification(
+                    user_id=userID,
+                    message=f"User ID : {userID} has Complted Periodic Travel of duration : {interval_seconds}"
                 )
         except ValueError as e:
             print(f"Error parsing last_notification_timestamp: {last_timestamp_str} | Exception: {e}")
