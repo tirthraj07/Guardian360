@@ -18,6 +18,7 @@ class PostRequest(BaseModel):
 class Message(BaseModel):
     trigger: int
     user_id: int
+    device_id: str
 
 @app.post("/configure-button")
 async def configure_button(config: ConfigureRequest):
@@ -47,26 +48,17 @@ async def get_user_for_button(post_request: PostRequest):
     print(f"Returning user_id: {user_id} for button_id: {post_request.button_id}")  # Debugging message
     return JSONResponse(content={"user_id": user_id}, status_code=200)
 
-@app.post("/postjson")
-async def push_button(request: Message):
-
-    print(f"Received request from user_id: {request.user_id} that Tigger is pressed")
-    
-    return {"message" : "received data"}
-    device_id: str
-    trigger: int
-
-@app.post("/postjson")
+@app.post("/button-sos")
 async def receive_message(data: Message):
-    print(data.trigger)  # Print received data for debugging
+    """
+    This route handles button press events from the microcontroller.
+    """
+    print(f"Received request from user_id: {data.user_id}, Device ID: {data.device_id}, Trigger: {data.trigger}")
     print(datetime.datetime.now())
+    
     return {
         "message": "Message received successfully",
         "received_data": data.trigger
     }
-
-
-
-
 
 # Run with: uvicorn app.main:app --reload --port 8001 --host 0.0.0.0
