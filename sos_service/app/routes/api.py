@@ -3,7 +3,10 @@ from flask import Blueprint, jsonify, request, make_response
 from pydantic import ValidationError
 
 from app.models.mobile_app_sos_model import MobileAppSos
+from app.models.button_sos_data import ButtonSosData
+
 from app.services.sos_receive_service import SosReceiveService
+
 
 api = Blueprint('api', __name__)
 
@@ -38,7 +41,11 @@ def sos_signal():
             thread.start()
 
         elif xToken == "WIFI_BUTTON":
-            pass
+            body = request.get_json()
+            sos_details = ButtonSosData(**body)
+
+            thread = threading.Thread(target=SosReceiveService.handle_button_sos, args=(sos_details,))
+            thread.start()
 
         return jsonify({
             'message': 'SOS message recieved Successfuly'
