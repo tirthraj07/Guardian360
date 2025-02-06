@@ -60,10 +60,7 @@
     </div>
     <div class="content">
       <p>Dear {{ recipient_full_name }},</p>
-      <p>
-        Your friend has arrived safely at their destination.
-      </p>
-      <p class="code">{{ message }}</p> 
+      <p class="code">{{ message | safe }}</p> 
     </div>
     <div class="footer">
       <p>&copy; 2025 Guardians360. All rights reserved.</p>
