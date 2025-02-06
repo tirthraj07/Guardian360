@@ -1,5 +1,5 @@
 {
-  "name": "sms_receiving_service",
+  "name": "sms_gatway_service",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -13,7 +13,9 @@
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "node-fetch": "^2.7.0",
     "nodemon": "^3.1.9",
     "ws": "^8.18.0",
     "xss-clean": "^0.1.4"
