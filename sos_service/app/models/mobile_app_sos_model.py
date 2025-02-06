@@ -8,4 +8,4 @@ class MobileAppSos(BaseModel):
     userID: int
     location: LocationUser
     created_at : datetime = Field(default_factory=datetime.now)
-    notify_regional_users : bool
+    notify_regional_users : Optional[bool] = False

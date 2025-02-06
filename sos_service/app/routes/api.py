@@ -17,10 +17,10 @@ def index():
 def sos_signal():
 
     # STEP - 1 : Decoding X-Token from Header
-    xToken = request.headers.get('X-Token')
+    xToken = request.headers.get('x-Token')
 
     if not xToken:
-        return {"error": "Missing X-Token"}, 400 
+        return {"error": "Missing x-Token"}, 400 
 
     # Validating Header
     valid_headers = ['MOBILE_APP', 'WIFI_BUTTON', 'SMS_GATEWAY']
