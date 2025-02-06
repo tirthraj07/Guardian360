@@ -212,8 +212,8 @@ class LocationService:
         notification_client.send_travel_alert_notification(
             user_id=userID,
             message= f"{user_details['first_name']} is traveling. You'll be notified again in {frequency} mins.",
-            email_message=f"""{user_details['first_name']} has started traveling. You can track their journey in real time via our app.Stay updated with live location and notifications.\n\nSource Location\n{source_location}\n\Destination Location\n{destination_location}"""
-        )
+            email_message=f"""{user_details['first_name']} has started traveling. You can track their journey in real time via our app.<br><br>Stay updated with live location and notifications.<hr>Location Details : Click to view<br><br><a href =\"{source_location}\">Source Location</a><br><br><a href =\"{destination_location}\">Destination Location</a>"""
+)
 
     @staticmethod
     def _send_periodic_travel_notification(userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp):
