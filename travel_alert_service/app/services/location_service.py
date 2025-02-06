@@ -170,6 +170,16 @@ class LocationService:
             if cached_location:
                 cached_locations[friend_id] = cached_location
 
+
+        travel_modes = {}
+        for friend_id in friend_ids:
+            travel_mode = TravelModeDetailsRepository.get_travel_mode(friend_id)
+            print
+            if travel_mode:
+                travel_modes[friend_id] = travel_mode
+            else:
+                travel_modes[friend_id] = False
+
         # Find missing locations (not in cache)
         missing_friend_ids = [fid for fid in friend_ids if fid not in cached_locations]
         db_locations = CurrentLocationRepository.get_location_by_user_ids(user_ids=missing_friend_ids)
@@ -179,9 +189,10 @@ class LocationService:
 
         response = []
         for friend_id in friend_ids:
-            if friend_id in user_map:  # ✅ Ensure the user exists
+            if friend_id in user_map:
                 user_info = user_map[friend_id].copy()
                 user_info["location"] = cached_locations.get(friend_id)
+                user_info["travel_mode"] = travel_modes.get(friend_id)
                 response.append(user_info)
 
         return response
@@ -234,5 +245,24 @@ class LocationService:
                 )
         except ValueError as e:
             print(f"Error parsing last_notification_timestamp: {last_timestamp_str} | Exception: {e}")
+
+
+    @staticmethod
+    def turn_off_travel_mode(userID: int):
+        try:
+            result = TravelModeDetailsRepository.turnOffTravelMode(userID)
+
+            if result is None:
+                return None  # User not found
+            elif result is False:
+                return False  # Travel mode already off
+            else:
+                return True  # Successfully turned off travel mode
+
+        except Exception as e:
+            print(f"Error in LocationService.turn_off_travel_mode: {e}")
+            return None
+
+
 
 
