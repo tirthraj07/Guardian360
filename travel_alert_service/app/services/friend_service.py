@@ -48,11 +48,13 @@ class FriendService:
             )
 
     @staticmethod
-    def accept_friend_requests(userID, accepted_user_ids):
+    def accept_friend_requests(receiverID, pending_request_ids):
+        print(f"Reciever ID : {receiverID}")
+        print(f"pending_request_ids : {pending_request_ids}")
         try:
-            for receiverID in accepted_user_ids:
+            for senderID in pending_request_ids:
                 try:
-                    FriendRelationsRepository.add_friend(receiverID, userID)  # Use repository class
+                    FriendRelationsRepository.add_friend(senderID, receiverID)  # Use repository class
                 except Exception as e:
                     raise HTTPException(
                         status_code=status.HTTP_400_BAD_REQUEST,

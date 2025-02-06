@@ -50,3 +50,6 @@ class KnownPlaceCreate(BaseModel):
     location: Location
     location_name: str
     place_nick_name: str
+
+class TurnOffTravelMode(BaseModel):
+    userID: int

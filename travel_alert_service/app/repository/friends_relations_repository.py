@@ -8,6 +8,10 @@ class FriendRelationsRepository:
 
     @staticmethod
     def add_friend(user_id, friend_id):
+
+        print(f"Amey : {friend_id}")
+        print(f"Advait : {user_id}")
+        
         response = supabase.table("friend_relations").insert({
             "userID": user_id, 
             "friendID": friend_id

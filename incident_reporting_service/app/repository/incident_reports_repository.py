@@ -10,16 +10,19 @@ incident_report_collection = db['incident_reports']
 
 class IncidentReportsRepository:
     @staticmethod
-    def create(userID, typeID, subtypeID, description, latitude, longitude, place_name):
+    def create(userID, typeName, subtypeName, description, latitude, longitude, place_name):
         data = {
             "userID": userID,
-            "typeID": typeID,
-            "subtypeID": subtypeID,
+            "typeName": typeName,
+            "subtypeName": subtypeName,
             "description": description,
             "latitude": latitude,
             "longitude": longitude,
             "place_name": place_name,
+            "ai_generated" : False
         }
+
+        print(data)
 
         # response = supabase.table("incident_reports").insert(data).execute()
         response = incident_report_collection.insert_one(data)

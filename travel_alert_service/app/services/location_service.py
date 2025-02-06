@@ -13,7 +13,11 @@ from app.repository.user_repository import UsersRepository
 from app.models.location_models import UserLocationData
 
 # Utils
-from app.utils.notification_service import NotificationServiceUtils
+from app.utils.guardian360_notification_utils.client import Guardian360NotificationClient
+
+notification_client = Guardian360NotificationClient(
+    base_url="http://143.110.183.53/notification-service"
+)
 
 class LocationService:
     
@@ -94,7 +98,7 @@ class LocationService:
     @staticmethod
     def handle_travel_mode(userID, travel_details, timestamp, current_latitude, current_longitude):
         
-        THRESHOLD_DISTANCE = 40  # in metres
+        THRESHOLD_DISTANCE = 400  # in metres
         if not travel_details:
             print("Travel Mode Off")
             return False
@@ -117,6 +121,7 @@ class LocationService:
               f"Distance to Destination : {distance_to_destination}"
               )
 
+
         # Check if travel mode is ON and if the source and destination location are same. if they are different, user must have changed the travel mode.
         
         send_first_notification = not TravelModeDetailsRepository.check_if_details_exists(
@@ -137,6 +142,9 @@ class LocationService:
         )
 
         if distance_to_destination < THRESHOLD_DISTANCE:
+            print("\n\n\nTurning off Travel Mode Automatically")
+            print("You have reached your destination !!!")
+            TravelModeDetailsRepository.turnOffTravelMode(userID)
             return False
         return True
 
@@ -150,6 +158,8 @@ class LocationService:
         if not friend_ids:
             return []
 
+        print(friend_ids)
+
         users = UsersRepository.get_users_by_ids(user_ids=friend_ids)
         user_map = {user["userID"]: user for user in users}
     
@@ -160,6 +170,16 @@ class LocationService:
             if cached_location:
                 cached_locations[friend_id] = cached_location
 
+
+        travel_modes = {}
+        for friend_id in friend_ids:
+            travel_mode = TravelModeDetailsRepository.get_travel_mode(friend_id)
+            print
+            if travel_mode:
+                travel_modes[friend_id] = travel_mode
+            else:
+                travel_modes[friend_id] = False
+
         # Find missing locations (not in cache)
         missing_friend_ids = [fid for fid in friend_ids if fid not in cached_locations]
         db_locations = CurrentLocationRepository.get_location_by_user_ids(user_ids=missing_friend_ids)
@@ -169,9 +189,10 @@ class LocationService:
 
         response = []
         for friend_id in friend_ids:
-            if friend_id in user_map:  # ✅ Ensure the user exists
+            if friend_id in user_map:
                 user_info = user_map[friend_id].copy()
                 user_info["location"] = cached_locations.get(friend_id)
+                user_info["travel_mode"] = travel_modes.get(friend_id)
                 response.append(user_info)
 
         return response
@@ -182,8 +203,16 @@ class LocationService:
             userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp
         )
         print("\n\nFirst Notification Sent.")
-        NotificationServiceUtils.send_travel_alert_notification(
-            user_id=userID, message=f"UserID: {userID} turned on travel mode"
+
+        user_details = UsersRepository.get_user_by_id(userID)
+
+        source_location = f"https://www.google.com/maps?q={source_lat},{source_long}"
+        destination_location = f"https://www.google.com/maps?q={dest_lat},{dest_long}"
+
+        notification_client.send_travel_alert_notification(
+            user_id=userID,
+            message= f"{user_details['first_name']} is traveling. You'll be notified again in {frequency} mins.",
+            email_message=f"""{user_details['first_name']} has started traveling. You can track their journey in real time via our app.Stay updated with live location and notifications.\n\nSource Location\n{source_location}\n\Destination Location\n{destination_location}"""
         )
 
     @staticmethod
@@ -205,7 +234,35 @@ class LocationService:
                 TravelModeDetailsRepository.add_location_details(
                     userID, source_lat, source_long, dest_lat, dest_long, frequency, timestamp
                 )
+                user_details = UsersRepository.get_user_by_id(userID)
+
+                source_location = f"https://www.google.com/maps?q={source_lat},{source_long}"
+                destination_location = f"https://www.google.com/maps?q={dest_lat},{dest_long}"
+
+                notification_client.send_travel_alert_notification(
+                    user_id=userID,
+                    message=f"{frequency} mins have passed. Check {user_details['first_name']}'s location for safety."
+                )
         except ValueError as e:
             print(f"Error parsing last_notification_timestamp: {last_timestamp_str} | Exception: {e}")
+
+
+    @staticmethod
+    def turn_off_travel_mode(userID: int):
+        try:
+            result = TravelModeDetailsRepository.turnOffTravelMode(userID)
+
+            if result is None:
+                return None  # User not found
+            elif result is False:
+                return False  # Travel mode already off
+            else:
+                return True  # Successfully turned off travel mode
+
+        except Exception as e:
+            print(f"Error in LocationService.turn_off_travel_mode: {e}")
+            return None
+
+
 
 
