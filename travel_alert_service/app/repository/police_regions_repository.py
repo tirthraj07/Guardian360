@@ -1,4 +1,6 @@
 import json
+
+from bson import ObjectId
 from app.database.supabase import supabase
 from app.database.mongodb import db
 from pymongo import errors
@@ -46,3 +48,30 @@ class PoliceRegionsRepository:
             # Handle any other exceptions
             print(f"Unexpected error: {e}")
             return {"message": "An unexpected error occurred"}
+        
+        
+    @staticmethod
+    def get_authorities_details(region_id):
+        try:
+            # Convert region_id string to ObjectId
+            object_id = ObjectId(region_id)
+
+            # Fetch data from the database
+            result = police_regions_collection.find_one({"_id": object_id})
+
+            if result:
+                # Convert ObjectId to string for JSON compatibility
+                result["_id"] = str(result["_id"])
+                
+                print("\n\n\nFetched Authorities Details:\n", result)
+                return result
+            else:
+                return {"status": "error", "message": "Region not found"}
+        
+        except errors.PyMongoError as e:
+            print(f"Database error: {e}")
+            return {"status": "error", "message": "An error occurred while querying the database"}
+        
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            return {"status": "error", "message": "An unexpected error occurred"}

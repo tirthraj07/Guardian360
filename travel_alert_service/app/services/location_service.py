@@ -98,7 +98,7 @@ class LocationService:
     @staticmethod
     def handle_travel_mode(userID, travel_details, timestamp, current_latitude, current_longitude):
         
-        THRESHOLD_DISTANCE = 400  # in metres
+        THRESHOLD_DISTANCE = 10  # in metres
         if not travel_details:
             print("Travel Mode Off")
             return False
@@ -145,6 +145,8 @@ class LocationService:
             print("\n\n\nTurning off Travel Mode Automatically")
             print("You have reached your destination !!!")
             TravelModeDetailsRepository.turnOffTravelMode(userID)
+            
+            
             return False
         return True
 
