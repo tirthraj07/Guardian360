@@ -4,10 +4,12 @@ import asyncio
 from flask import Blueprint, jsonify, request, make_response, current_app
 from pydantic import ValidationError
 
+# Models
 from app.models.mobile_app_sos_model import MobileAppSos
 from app.models.button_sos_data import ButtonSosData
 from app.models.sos_video_receive_model import SosVideoReceive
 
+# Services
 from app.services.sos_receive_service import SosReceiveService
 from app.services.sos_video_service import SosVideoService
 
@@ -65,7 +67,7 @@ def sos_signal_video_receive(userID: int):
     if 'video' not in request.files:
         return jsonify({"error": "No video file found"}), 400
     
-    video = request.files['video']
+    video = request.files['video']  
     user_id = userID
 
     if video.filename == '':

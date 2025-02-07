@@ -1,0 +1,15 @@
+python-dotenv
+typing
+requests
+
+Flask
+Flask-Cors
+Werkzeug
+
+confluent-kafka
+kafka-python
+kafka-python-ng
+
+supabase
+pymongo
+pydantic

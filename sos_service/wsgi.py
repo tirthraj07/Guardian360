@@ -1,11 +1,8 @@
-'''
-TODO:
-- To Recieve SOS and call AI modules 
-'''
-from app import create_app
-from flask_cors import CORS
 from dotenv import load_dotenv
 load_dotenv()
+from app import create_app
+from flask_cors import CORS
+
 import os
 
 app = create_app()
