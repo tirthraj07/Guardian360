@@ -34,7 +34,14 @@ Topic: notifications    TopicId: m-IokoCiRjW-q5VLhcZ3rg PartitionCount: 4       
         Topic: notifications    Partition: 3    Leader: 1       Replicas: 1     Isr: 1
 ```
 
-#### Step 5: Send message using a programmatic producer
+#### Step 5: Create a topic `reports` with 1 partition
+
+```bash
+docker exec -it kafka kafka-topics --create --topic reports --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+```
+
+
+#### Send message using a programmatic producer
 
 ```python
 from confluent_kafka import Producer
