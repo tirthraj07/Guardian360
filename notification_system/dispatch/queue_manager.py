@@ -1,16 +1,19 @@
 from queue import PriorityQueue
+import itertools
 
 class PriorityQueueManager:
     priority_queue = PriorityQueue()
+    counter = itertools.count()
 
     @classmethod
     def add_message(cls, priority, message):
-        cls.priority_queue.put((priority, message))
+        count = next(cls.counter)  # Get a unique sequence number
+        cls.priority_queue.put((priority, count, message))  # Add a tie-breaker
 
     @classmethod
     def process_queue(cls):
         while not cls.priority_queue.empty():
-            _, message = cls.priority_queue.get()
+            _, _, message = cls.priority_queue.get()
             print(f"Processing message: {message}")
 
             event_type = message['event_type']
