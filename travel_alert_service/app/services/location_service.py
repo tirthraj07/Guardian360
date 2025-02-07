@@ -98,6 +98,8 @@ class LocationService:
     @staticmethod
     def handle_travel_mode(userID, travel_details, timestamp, current_latitude, current_longitude):
         
+        
+        print(travel_details)
         THRESHOLD_DISTANCE = 10  # in metres
         if not travel_details:
             print("Travel Mode Off")
