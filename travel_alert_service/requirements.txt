@@ -10,3 +10,4 @@ ollama
 uvicorn
 supabase
 redis
+requests
