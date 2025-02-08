@@ -2,12 +2,13 @@ from app.database.supabase import supabase
 
 class CurrentLocationRepository:
     @staticmethod
-    def update_location(user_id, latitude, longitude, timestamp):
+    def update_location(user_id, latitude, longitude, timestamp, police_region_id=None):
         response = supabase.table("current_location").upsert({
             "userID": user_id,
             "latitude": latitude,
             "longitude": longitude,
-            "timestamp": timestamp
+            "timestamp": timestamp,
+            "police_region_id": police_region_id
         }).execute()
         return {"valid": True, "message": "Location updated"} if response.data else {"valid": False, "message": "Failed to update location"}
 
