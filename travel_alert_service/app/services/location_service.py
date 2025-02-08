@@ -19,6 +19,7 @@ notification_client = Guardian360NotificationClient(
     base_url="http://143.110.183.53/notification-service"
 )
 
+
 class LocationService:
     
     @staticmethod
@@ -52,7 +53,6 @@ class LocationService:
             print(f"Location updated in DATABASE: UserID {userID}, Lat {latitude}, Long {longitude}, Time {timestamp}, Police Region ID {police_region_id}")
 
             # Update the police region in cache
-
 
             UserCacheRepository.set_police_region(
                 user_id=userID, 

@@ -57,14 +57,13 @@ class PoliceRegionsRepository:
             object_id = ObjectId(region_id)
 
             # Fetch data from the database
-            result = police_regions_collection.find_one({"_id": object_id})
-
+            result = police_regions_collection.find_one({"_id": object_id}, {"region_name":1, "station":1, "medical_contact":1, "high":1, "moderate":1, "low":1})
             if result:
                 # Convert ObjectId to string for JSON compatibility
                 result["_id"] = str(result["_id"])
                 
-                print("\n\n\nFetched Authorities Details:\n", result)
-                return result
+                print("Fetched Authorities Details:\n", result)
+                return {"status":"success", "result":result}
             else:
                 return {"status": "error", "message": "Region not found"}
         
