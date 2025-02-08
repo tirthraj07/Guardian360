@@ -12,6 +12,7 @@ from app.models.sos_video_receive_model import SosVideoReceive
 # Services
 from app.services.sos_receive_service import SosReceiveService
 from app.services.sos_video_service import SosVideoService
+from app.services.poker_service import PokerService
 
 
 api = Blueprint('api', __name__)
@@ -82,3 +83,31 @@ def sos_signal_video_receive(userID: int):
     # asyncio.run(SosVideoService.async_video_tasks(user_id))
 
     return jsonify({"message": "Video uploaded successfully"}), 200
+
+
+@api.route("/poke/<int:receiver_id>", methods=["POST"])
+def create_poke_request(receiver_id):
+    data = request.get_json()
+    sender_poker_id = data.get("sender_poker_id")
+    
+    if not sender_poker_id:
+        return jsonify({"success": False, "message": "Sender ID is required."}), 400
+    
+    
+    return jsonify(PokerService.poke_friend(sender_poker_id, receiver_id))
+
+@api.route("/poke/status/<int:receiver_id>", methods=["POST"])
+def get_poke_status(receiver_id):
+    data = request.get_json()
+    sender_poker_id = data.get("sender_poker_id")
+    
+    if not sender_poker_id:
+        return jsonify({"success": False, "message": "Sender ID is required."}), 400
+    
+    
+    return jsonify(PokerService.get_poke_status(sender_poker_id, receiver_id))
+
+@api.route("/poke/acknowledge/<int:receiver_id>", methods=["POST"])
+def acknowledge_poke_request(receiver_id):
+
+    return jsonify(PokerService.acknowledge_poke_request(receiver_id))
