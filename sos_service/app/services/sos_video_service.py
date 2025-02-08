@@ -38,11 +38,11 @@ class SosVideoService:
             return
 
         # Step 4:
-        result_after_deleting_local_video = SosVideoService.delete_video_from_local(user_id)
+        # result_after_deleting_local_video = SosVideoService.delete_video_from_local(user_id)
 
-        if not result_after_deleting_local_video['success']:
-            print("ERROR: Could not delete local video")
-            return
+        # if not result_after_deleting_local_video['success']:
+            # print("ERROR: Could not delete local video")
+            # return
         
         print("Sequential tasks completed successfully")
 
