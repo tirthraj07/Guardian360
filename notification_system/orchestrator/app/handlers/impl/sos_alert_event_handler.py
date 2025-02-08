@@ -4,6 +4,8 @@ from app.services.notification_service import NotificationService
 from app.services.user_service import UserService
 from app.models.notification_model import NotificationModel
 
+from app.services.current_location_service import CurrentLocationService
+
 class SOSAlertEventHandler(EventHandler):
     def __init__(self, notification: NotificationModel):
         super().__init__(notification)
@@ -18,7 +20,14 @@ class SOSAlertEventHandler(EventHandler):
             raise Exception("Metadata required. metadata : {userID (MANDATORY), location: {lat, long} (OPTIONAL)}")
         
         friend_ids = UserService.get_friend_ids(user_id)
-    
+        
+        ids_near_user = CurrentLocationService.get_user_ids_near_user_id(user_id)
+
+        for id in ids_near_user:
+            if id not in friend_ids:
+                print(f"UserID {id} in same region but not frind of user. Sending SOS for immediate help")
+                friend_ids.append(id)
+
         # TODO: Add authorities user_ids in recipients as well
         self.recipients = friend_ids
 
