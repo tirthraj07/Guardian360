@@ -21,14 +21,5 @@ def get_region_specific_data(region_id: str, request: UserIDModel):
         print("Fetching authorities failed")
         print(result_after_fetching["message"])
         raise HTTPException(status_code=404, detail={"message": result_after_fetching["message"]})
-    
-    region_name = result_after_fetching["result"]['region_name']
-    high = result_after_fetching["result"]['high']
-    moderate = result_after_fetching["result"]['moderate']
-    low = result_after_fetching["result"]['low']
-
-    if low is not None and moderate is not None and high is not None:
-        print(f"Report Aggregation for Region\nregion_id: {region_id}\nregion_name: {region_name}\nhigh = {high}\nmoderate = {moderate}\nlow = {low}")
-        handle_adaptive_location_alert(user_id, region_id, region_name, low, moderate, high)
-    
+        
     return result_after_fetching["result"]

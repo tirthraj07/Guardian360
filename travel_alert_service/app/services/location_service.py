@@ -2,6 +2,9 @@ import datetime
 from datetime import datetime, timezone
 from fastapi import HTTPException, status
 
+# Services
+from app.services.police_regions_service import PoliceRegionService
+
 # Repository
 from app.repository.current_location_repository import CurrentLocationRepository
 from app.repository.travel_mode_repository import TravelModeDetailsRepository
@@ -14,6 +17,9 @@ from app.models.location_models import UserLocationData
 
 # Utils
 from app.utils.guardian360_notification_utils.client import Guardian360NotificationClient
+
+# Methods
+from app.methods.adaptive_location_alert import handle_adaptive_location_alert
 
 notification_client = Guardian360NotificationClient(
     base_url="http://143.110.183.53/notification-service"
@@ -40,7 +46,24 @@ class LocationService:
                 print("Error while fetching police_regions")
                 police_region["_id"] = None
 
-            police_region_id = police_region['_id']
+            new_police_region_id = police_region['_id']
+
+            old_police_region_id = UserCacheRepository.get_police_region(userID)
+
+            if old_police_region_id is None or new_police_region_id != old_police_region_id:
+                print("Police Region Changed. Handing Adaptive Location Alert")
+                # Handle Adaptive Travel Mode
+                result_after_fetching = PoliceRegionService.fetch_authorities_details_by_region_id(new_police_region_id)
+                if result_after_fetching['status'] == "success":
+                    region_name = result_after_fetching["result"]['region_name']
+                    high = result_after_fetching["result"]['high']
+                    moderate = result_after_fetching["result"]['moderate']
+                    low = result_after_fetching["result"]['low']
+                    if low is not None and moderate is not None and high is not None:
+                        print(f"Report Aggregation for Region\nregion_id: {new_police_region_id}\nregion_name: {region_name}\nhigh = {high}\nmoderate = {moderate}\nlow = {low}")
+                        handle_adaptive_location_alert(userID, new_police_region_id, region_name, low, moderate, high)
+
+            police_region_id = new_police_region_id
 
             # Update the location in Database
             CurrentLocationRepository.update_location(
@@ -103,11 +126,12 @@ class LocationService:
         
         THRESHOLD_DISTANCE = 50  # in metres
         
-        print(travel_details)
         if not travel_details:
             print("Travel Mode Off")
             return False
         
+        print(travel_details)
+
         location_details = travel_details.location_details
         vehicle_details = travel_details.vehicle_details
 
