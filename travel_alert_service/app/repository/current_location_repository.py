@@ -19,6 +19,13 @@ class CurrentLocationRepository:
         return friend_ids if friend_ids else []
     
     @staticmethod
+    def get_location_by_user_id(user_id):
+        if not user_id:
+            return None
+        location = supabase.table("current_location").select("userID, latitude, longitude, timestamp, police_region_id").eq("userID", user_id).execute()
+        return location.data[0] if location.data else None
+
+    @staticmethod
     def get_location_by_user_ids(user_ids):
         if not user_ids:
             return []
