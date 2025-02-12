@@ -82,7 +82,7 @@ class _SmsHomePageState extends State<SmsHomePage> {
       if (messages.isNotEmpty && mounted) {
         final latestMessage = messages.first.body ?? "No content";
         final sender = messages.first.address ?? "Unknown sender";
-        print("Fetching SMS..");
+        // print("Fetching SMS..");
         // Send only if the message is new
         if (latestMessage != _lastProcessedMessage) {
           setState(() {
@@ -172,6 +172,7 @@ class _SmsHomePageState extends State<SmsHomePage> {
             String eventType = data["event_type"] ?? "";
 
             // Print extracted values
+            debugPrint("===== MESSAGE FROM NOTIFICATION SERVICE ====");
             debugPrint("Recipient: $recipient");
             debugPrint("Message: $smsMessage");
             debugPrint("Event Type: $eventType");
