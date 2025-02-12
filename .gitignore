@@ -2,3 +2,6 @@ venv
 .env
 __pycache__
 test_images
+.git
+.vscode
+.idea
