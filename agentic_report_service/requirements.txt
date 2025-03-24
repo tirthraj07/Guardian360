@@ -1,0 +1,14 @@
+pymongo
+pydantic
+fastapi
+python-dotenv
+ollama
+supabase
+confluent-kafka
+Werkzeug
+kafka-python
+kafka-python-ng
+typing
+opencv-python
+numpy
+loguru

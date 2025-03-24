@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Safety Observation Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; }
+        .section { margin-bottom: 25px; }
+        .section-title { 
+            color: #3498db; 
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .observation-list { list-style-type: square; padding-left: 20px; }
+        .risk-level { color: #c0392b; font-weight: bold; }
+        .recommendation { background-color: #f9f9f9; padding: 10px; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>Safety Observation System Report</h1>
+    
+    <div class="section">
+        <div class="section-title">Executive Summary</div>
+        <p>{{ summary }}</p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Key Observations</div>
+        <ul class="observation-list">
+            {% for observation in observations %}
+            <li>{{ observation }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Risk Assessment</div>
+        <p>Overall Risk Level: <span class="risk-level">{{ risk_assessment.risk_level }}</span></p>
+        <p>Confidence Score: {{ risk_assessment.confidence_score }}%</p>
+        <p>{{ risk_assessment.risk_rationale }}</p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Recommendations</div>
+        {% for recommendation in recommendations %}
+        <div class="recommendation">{{ recommendation }}</div>
+        {% endfor %}
+    </div>
+</body>
+</html>
