@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "11797163771",
+    "project_id": "guardians-notifications",
+    "storage_bucket": "guardians-notifications.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:11797163771:android:117614b0b694023fb6ca5e",
+        "android_client_info": {
+          "package_name": "com.ameyTech.guardians_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXFjpqEVI8ELXGyQToYe7aC_ReR-2-5Uo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

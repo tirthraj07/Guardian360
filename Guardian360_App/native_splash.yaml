@@ -1,0 +1,7 @@
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+  color: "#23234F"
+  image: assets/images/Guardian_360_logo.jpg  # Optional: Path to splash screen logo
+  fullscreen: true  # Optional: Enable fullscreen mode
