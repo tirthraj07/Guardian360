@@ -86,7 +86,8 @@ Upon entering a new region, the system evaluates aggregated incident reports bas
 
 This feature ensures that users are always aware of potential risks in their vicinity, empowering them to take proactive measures to stay safe.
 
-Email Example of Adaptive Alert:
+Email Example of Adaptive Alert:   
+
 ![Adaptive Alert](public/ReadMe_Images/adaptive_alert.png)
 
 ##### 5. Battery and Network Alerts
