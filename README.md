@@ -27,7 +27,7 @@ Guardian360 was more than just a project for us; it was a mission to create some
 
 ![Trophies](public/trophies_photo.jpeg)
 
-**Guardian360** has secured **3rd Place** out of 350+ teams at [Techfiesta 2025](https://techfiesta.pict.edu/) organised by **[Pune Institute of Computer Technology](https://www.pict.edu/)** 
+**Guardian360** has secured **3rd Place** out of 350+ teams at [Techfiesta 2025](https://techfiesta.pict.edu/) organized by **[Pune Institute of Computer Technology](https://www.pict.edu/)** 
 
 
 Also, it stood **1st** at PICT's flagship technical event, **[Impetus and Concepts (InC) 2025](https://pictinc.org/)** in the **Application Development Domain**.
@@ -117,7 +117,7 @@ If **online**, an additional SOS alert is triggered via an HTTP request to the s
 
 Guardian360 follows a **flooding mechanism** to ensure that at least one person receives the notification. If any single recipient receives the SOS alert, the system automatically attempts to deliver it to all intended recipients, **ensuring that no distress signal is lost**. If the alert is received only by the police station via SMS, the system will then try to **re-broadcast** it to the Close Circle and nearby users, maximizing the chances of delivering **at least one** successful notification.
 
-_Fooding Example_
+_Flooding Example_
 ![](public/ReadMe_Images/flooding_example.png)
 
 <br>
@@ -149,7 +149,7 @@ A final combined report is generated and stored in the database for use in Post-
 
 #### 2. SOS Button
 
-As this product was also develpped for children, a physical **SOS Button** is provided for emergency use. This button can be integrated with wearable form factor, allowing it to be more accessible than an on screen button. On pressing the button, it sends the SOS signal similar to the signal sent through the application.
+As this product was also developed for children, a physical **SOS Button** is provided for emergency use. This button can be integrated with wearable form factor, allowing it to be more accessible than an on screen button. On pressing the button, it sends the SOS signal similar to the signal sent through the application.
 
 ![](public/ReadMe_Images/physical_button.png)
 
